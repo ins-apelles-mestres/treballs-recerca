@@ -1,3 +1,43 @@
+// ─── LOGIN ───────────────────────────────────────────────────────────────────
+const USUARIS = [
+  { usuari: 'rsero1', contrasenya: 'rsero1' },
+];
+
+function initLogin() {
+  if (sessionStorage.getItem('autenticat') === 'true') {
+    mostrarContingut();
+    return;
+  }
+  document.getElementById('login-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const u = document.getElementById('login-usuari').value.trim();
+    const c = document.getElementById('login-contrasenya').value;
+    const valid = USUARIS.some(x => x.usuari === u && x.contrasenya === c);
+    if (valid) {
+      sessionStorage.setItem('autenticat', 'true');
+      mostrarContingut();
+    } else {
+      document.getElementById('login-error').hidden = false;
+    }
+  });
+}
+
+function mostrarContingut() {
+  document.getElementById('login-overlay').hidden = true;
+  document.getElementById('contingut-principal').hidden = false;
+}
+
+function logout() {
+  sessionStorage.removeItem('autenticat');
+  document.getElementById('contingut-principal').hidden = true;
+  document.getElementById('login-overlay').hidden = false;
+  document.getElementById('login-usuari').value = '';
+  document.getElementById('login-contrasenya').value = '';
+}
+
+initLogin();
+// ─────────────────────────────────────────────────────────────────────────────
+
 (function () {
   'use strict';
 
