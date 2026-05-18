@@ -254,13 +254,12 @@ initLogin();
     const badgePremi = badgeCard(t.premi);
 
     const thumb = thumbnailUrl(t.pdf);
-    const inicials = inicialsTitol(t.titol);
     const portada = thumb
-      ? `<a class="card-portada" href="${escHtml(t.pdf)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true" data-inicials="${inicials}">
+      ? `<a class="card-portada" href="${escHtml(t.pdf)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
            <img src="${thumb}" alt="Portada de ${escHtml(t.titol)}" loading="lazy"
                 onerror="this.style.display='none'; this.closest('.card-portada').classList.add('card-portada--error')">
          </a>`
-      : `<div class="card-portada card-portada--error" aria-hidden="true" data-inicials="${inicials}"></div>`;
+      : `<div class="card-portada card-portada--error" aria-hidden="true"></div>`;
 
     const btnPdf = t.pdf
       ? `<a class="btn-pdf" href="${escHtml(t.pdf)}" target="_blank" rel="noopener">
