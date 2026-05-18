@@ -400,6 +400,7 @@ select:focus { border-color: var(--color-accent); }
   flex: 1;
   overflow-y: auto;
   color: rgba(255,255,255,.92);
+  min-height: 0;
 }
 
 .card-back-resum::-webkit-scrollbar { width: 4px; }
@@ -422,7 +423,13 @@ select:focus { border-color: var(--color-accent); }
   flex-wrap: wrap;
   gap: .35rem;
   padding-top: .5rem;
+  max-height: 4.5rem;
+  overflow-y: auto;
+  flex-shrink: 0;
 }
+
+.tags-clau::-webkit-scrollbar { width: 3px; }
+.tags-clau::-webkit-scrollbar-thumb { background: rgba(255,255,255,.3); border-radius: 2px; }
 
 .tag-clau {
   background: rgba(255,255,255,.15);
