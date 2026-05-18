@@ -141,10 +141,29 @@
     cont.innerHTML = llista.map(t => htmlCard(t)).join('');
   }
 
+  function tipusPremi(premi) {
+    const val = (premi || '').trim().toLowerCase();
+    if (!val || val === 'pendent') return 'cap';
+    if (val === 'destacat') return 'destacat';
+    return 'premi';
+  }
+
+  function badgeCard(premi) {
+    const tipus = tipusPremi(premi);
+    if (tipus === 'cap') return '';
+    if (tipus === 'destacat') return `<span class="card-badge-destacat">◆ Destacat</span>`;
+    return `<span class="card-badge-premi">★ ${escHtml(premi)}</span>`;
+  }
+
+  function badgeTaula(premi) {
+    const tipus = tipusPremi(premi);
+    if (tipus === 'cap') return '—';
+    if (tipus === 'destacat') return `<span class="badge-destacat-taula">◆ Destacat</span>`;
+    return `<span class="badge-premi-taula">★ ${escHtml(premi)}</span>`;
+  }
+
   function htmlCard(t) {
-    const badgePremi = t.premi
-      ? `<span class="card-badge-premi">★ ${escHtml(t.premi)}</span>`
-      : (t.optaPremi ? `<span class="card-badge-opta">Finalista / Optant</span>` : '');
+    const badgePremi = badgeCard(t.premi);
 
     const thumb = thumbnailUrl(t.pdf);
     const portada = thumb
@@ -188,9 +207,7 @@
       return;
     }
     cos.innerHTML = llista.map(t => {
-      const celPremi = t.premi
-        ? `<span class="badge-premi-taula">★ ${escHtml(t.premi)}</span>`
-        : (t.optaPremi ? `<span class="badge-opta-taula">Optant</span>` : '—');
+      const celPremi = badgeTaula(t.premi);
 
       const celPdf = t.pdf
         ? `<a class="btn-pdf-taula" href="${escHtml(t.pdf)}" target="_blank" rel="noopener">PDF</a>`

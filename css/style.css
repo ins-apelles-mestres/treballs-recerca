@@ -316,6 +316,21 @@ select:focus { border-color: var(--color-accent); }
   align-self: flex-start;
 }
 
+.card-badge-destacat {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  background: #6a0dad;
+  color: #fff;
+  font-size: .75rem;
+  font-weight: 700;
+  padding: .2rem .6rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  align-self: flex-start;
+}
+
 .card-titol {
   font-size: 1rem;
   font-weight: 700;
@@ -440,6 +455,18 @@ th:not([aria-sort]) .icona-ordre::after { content: ' ↕'; }
   font-size: .78rem;
   color: #1a6fa8;
   font-weight: 600;
+}
+
+.badge-destacat-taula {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  background: #6a0dad;
+  color: #fff;
+  font-size: .78rem;
+  font-weight: 700;
+  padding: .15rem .5rem;
+  border-radius: 4px;
 }
 
 .btn-pdf-taula {
