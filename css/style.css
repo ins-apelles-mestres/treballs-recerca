@@ -127,8 +127,8 @@ header h1 {
 
 .stats-bar {
   flex-shrink: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: row;
   gap: .5rem;
 }
 
@@ -802,7 +802,7 @@ footer {
   .grid-cards { grid-template-columns: 1fr; }
   header { padding: 1.25rem 1rem 0; }
   .header-inferior { flex-direction: column; gap: 1rem; }
-  .stats-bar { display: flex; flex-wrap: wrap; grid-template-columns: none; }
+  .stats-bar { flex-wrap: wrap; }
 }
 
 @media (min-width: 641px) and (max-width: 900px) {
