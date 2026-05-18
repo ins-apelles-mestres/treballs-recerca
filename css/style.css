@@ -250,14 +250,18 @@ main {
    Controls de filtratge
    ============================================= */
 .controls {
-  background: var(--color-card);
-  border: 1px solid var(--color-vora);
+  background: #fff4e0;
+  border: 1px solid #fcd9a0;
   border-radius: var(--radi-card);
   padding: 1rem 1.25rem;
   margin-bottom: 1.25rem;
   display: flex;
   flex-direction: column;
   gap: .75rem;
+  position: sticky;
+  top: .75rem;
+  z-index: 10;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
 }
 
 .controls-fila-1,
