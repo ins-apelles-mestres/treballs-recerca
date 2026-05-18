@@ -85,22 +85,13 @@
 
     .visor-iframe {
       position: absolute;
-      inset: 0;
-      width: 100%;
+      top: 0;
+      left: 0;
+      /* 52px extra a la dreta per amagar la icona de Google Drive */
+      width: calc(100% + 52px);
       height: 100%;
       border: none;
       display: block;
-    }
-
-    /* Capa transparent que tapa la icona "obrir en nova pestanya" de Google Drive */
-    .visor-tap {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 56px;
-      height: 56px;
-      z-index: 10;
-      cursor: default;
     }
 
     /* Impedeix impressió */
@@ -117,7 +108,6 @@
     <img src="img/logo.png" alt="INS Apel·les Mestres" class="visor-logo">
   </div>
   <div class="visor-contenidor">
-    <div class="visor-tap"></div>
     <iframe id="visor-iframe" class="visor-iframe"
       sandbox="allow-scripts allow-same-origin allow-forms"
       allowfullscreen></iframe>
