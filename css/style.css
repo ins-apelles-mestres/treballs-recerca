@@ -394,17 +394,23 @@ select:focus { border-color: var(--color-accent); }
   padding-bottom: .6rem;
 }
 
+.card-back-contingut {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.card-back-contingut::-webkit-scrollbar { width: 4px; }
+.card-back-contingut::-webkit-scrollbar-thumb { background: rgba(255,255,255,.4); border-radius: 2px; }
+
 .card-back-resum {
   font-size: .85rem;
   line-height: 1.6;
-  flex: 1;
-  overflow-y: auto;
   color: rgba(255,255,255,.92);
-  min-height: 0;
 }
-
-.card-back-resum::-webkit-scrollbar { width: 4px; }
-.card-back-resum::-webkit-scrollbar-thumb { background: rgba(255,255,255,.4); border-radius: 2px; }
 
 .card-back-peu {
   padding-top: .6rem;
@@ -422,14 +428,8 @@ select:focus { border-color: var(--color-accent); }
   display: flex;
   flex-wrap: wrap;
   gap: .35rem;
-  padding-top: .5rem;
-  max-height: 4.5rem;
-  overflow-y: auto;
-  flex-shrink: 0;
+  padding-top: .25rem;
 }
-
-.tags-clau::-webkit-scrollbar { width: 3px; }
-.tags-clau::-webkit-scrollbar-thumb { background: rgba(255,255,255,.3); border-radius: 2px; }
 
 .tag-clau {
   background: rgba(255,255,255,.15);

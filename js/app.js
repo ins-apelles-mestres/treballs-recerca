@@ -71,7 +71,7 @@ initLogin();
 
   async function fetchData() {
     try {
-      const resp = await fetch(CSV_URL);
+      const resp = await fetch(CSV_URL, { cache: 'no-store' });
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const text = await resp.text();
       dades = parseCSV(text);
@@ -294,8 +294,10 @@ initLogin();
           </div>
           <div class="card-back">
             <h3 class="card-back-titol">${escHtml(t.titol)}</h3>
-            <p class="card-back-resum">${respostaDors}</p>
-            ${renderTagsCard(t.paraulesClau)}
+            <div class="card-back-contingut">
+              <p class="card-back-resum">${respostaDors}</p>
+              ${renderTagsCard(t.paraulesClau)}
+            </div>
             <div class="card-back-peu">
               ${btnPdf}
             </div>
