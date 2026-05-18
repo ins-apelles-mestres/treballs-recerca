@@ -48,13 +48,15 @@ initLogin();
 
   // Noms exactes de les columnes al full de càlcul
   const COLS = {
-    titol:     'Títol',
-    autor:     'Autor',
-    tutor:     'Tutor',
-    pdf:       'Enllaç PDF',
-    any:       'Any de defensa',
-    optaPremi: 'Ha optat a premi',
-    premi:     'Ha guanyat premi i quin',
+    titol:       'Títol',
+    autor:       'Autor',
+    tutor:       'Tutor',
+    pdf:         'Enllaç PDF',
+    any:         'Any de defensa',
+    optaPremi:   'Ha optat a premi',
+    premi:       'Ha guanyat premi i quin',
+    resum:       'Resum',
+    paraulesClau:'Paraules Clau',
   };
   // ─────────────────────────────────────────────────────────────────────────────
 
@@ -91,13 +93,15 @@ initLogin();
     });
 
     return files.slice(1).map(cels => ({
-      titol:     cel(cels, idx.titol),
-      autor:     cel(cels, idx.autor),
-      tutor:     cel(cels, idx.tutor),
-      pdf:       cel(cels, idx.pdf),
-      any:       parseInt(cel(cels, idx.any), 10) || 0,
-      optaPremi: normalitzaBolea(cel(cels, idx.optaPremi)),
-      premi:     cel(cels, idx.premi),
+      titol:        cel(cels, idx.titol),
+      autor:        cel(cels, idx.autor),
+      tutor:        cel(cels, idx.tutor),
+      pdf:          cel(cels, idx.pdf),
+      any:          parseInt(cel(cels, idx.any), 10) || 0,
+      optaPremi:    normalitzaBolea(cel(cels, idx.optaPremi)),
+      premi:        cel(cels, idx.premi),
+      resum:        cel(cels, idx.resum),
+      paraulesClau: cel(cels, idx.paraulesClau),
     })).filter(t => t.titol);
   }
 
@@ -317,7 +321,9 @@ initLogin();
     dadsFiltrades = dades.filter(t => {
       if (q && !normalitzaText(t.titol).includes(q) &&
                !normalitzaText(t.autor).includes(q) &&
-               !normalitzaText(t.tutor).includes(q)) return false;
+               !normalitzaText(t.tutor).includes(q) &&
+               !normalitzaText(t.resum).includes(q) &&
+               !normalitzaText(t.paraulesClau).includes(q)) return false;
       if (any && t.any !== parseInt(any, 10)) return false;
       if (premi === 'guanyadors' && tipusPremi(t.premi) !== 'premi') return false;
       if (premi === 'destacats' && tipusPremi(t.premi) !== 'destacat') return false;
