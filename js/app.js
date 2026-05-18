@@ -417,17 +417,12 @@ initLogin();
     const total = dades.length;
     const premiats = dades.filter(t => tipusPremi(t.premi) === 'premi').length;
     const destacats = dades.filter(t => tipusPremi(t.premi) === 'destacat').length;
-    const anys = dades.map(t => t.any).filter(Boolean);
-    const rang = anys.length
-      ? (Math.min(...anys) === Math.max(...anys)
-          ? Math.min(...anys)
-          : `${Math.min(...anys)}–${Math.max(...anys)}`)
-      : '—';
 
     document.getElementById('stat-total-num').textContent = total;
     document.getElementById('stat-premiats-num').textContent = premiats;
     document.getElementById('stat-destacats-num').textContent = destacats;
-    document.getElementById('stat-anys').textContent = rang;
+    document.getElementById('stat-bloc-premiats').hidden = premiats === 0;
+    document.getElementById('stat-bloc-destacats').hidden = destacats === 0;
   }
 
   function actualitzarComptador() {
