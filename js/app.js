@@ -248,8 +248,8 @@
                !normalitzaText(t.autor).includes(q) &&
                !normalitzaText(t.tutor).includes(q)) return false;
       if (any && t.any !== parseInt(any, 10)) return false;
-      if (premi === 'guanyadors' && !t.premi) return false;
-      if (premi === 'optants' && !t.optaPremi && !t.premi) return false;
+      if (premi === 'guanyadors' && tipusPremi(t.premi) !== 'premi') return false;
+      if (premi === 'destacats' && tipusPremi(t.premi) !== 'destacat') return false;
       return true;
     });
 
@@ -323,7 +323,8 @@
 
   function actualitzarStats() {
     const total = dades.length;
-    const premiats = dades.filter(t => t.premi).length;
+    const premiats = dades.filter(t => tipusPremi(t.premi) === 'premi').length;
+    const destacats = dades.filter(t => tipusPremi(t.premi) === 'destacat').length;
     const anys = dades.map(t => t.any).filter(Boolean);
     const rang = anys.length
       ? (Math.min(...anys) === Math.max(...anys)
@@ -333,6 +334,7 @@
 
     document.getElementById('stat-total').textContent = `${total} treball${total !== 1 ? 's' : ''}`;
     document.getElementById('stat-premiats').textContent = `${premiats} premiat${premiats !== 1 ? 's' : ''}`;
+    document.getElementById('stat-destacats').textContent = `${destacats} destacat${destacats !== 1 ? 's' : ''}`;
     document.getElementById('stat-anys').textContent = rang;
   }
 
