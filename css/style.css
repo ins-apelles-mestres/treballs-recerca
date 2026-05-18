@@ -81,6 +81,30 @@ header h1 {
   margin-top: .25rem;
 }
 
+.header-cita {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: .75rem 0 1.25rem;
+  border-top: 1px solid rgba(0,0,0,.12);
+}
+
+.header-cita blockquote {
+  font-size: clamp(.85rem, 2vw, 1rem);
+  font-style: italic;
+  color: rgba(0,0,0,.7);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.header-cita cite {
+  display: block;
+  font-size: .8rem;
+  font-style: normal;
+  font-weight: 600;
+  color: rgba(0,0,0,.5);
+  margin-top: .35rem;
+}
+
 .stats-bar {
   max-width: 1200px;
   margin: 0 auto;
