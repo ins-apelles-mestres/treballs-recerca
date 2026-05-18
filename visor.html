@@ -77,11 +77,30 @@
     }
 
     /* Iframe ocupa tota la resta */
-    .visor-iframe {
+    .visor-contenidor {
       flex: 1;
-      border: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .visor-iframe {
+      position: absolute;
+      inset: 0;
       width: 100%;
+      height: 100%;
+      border: none;
       display: block;
+    }
+
+    /* Capa transparent que tapa la icona "obrir en nova pestanya" de Google Drive */
+    .visor-tap {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 56px;
+      height: 56px;
+      z-index: 10;
+      cursor: default;
     }
 
     /* Impedeix impressió */
@@ -97,9 +116,12 @@
     </div>
     <img src="img/logo.png" alt="INS Apel·les Mestres" class="visor-logo">
   </div>
-  <iframe id="visor-iframe" class="visor-iframe"
-    sandbox="allow-scripts allow-same-origin allow-forms"
-    allowfullscreen></iframe>
+  <div class="visor-contenidor">
+    <div class="visor-tap"></div>
+    <iframe id="visor-iframe" class="visor-iframe"
+      sandbox="allow-scripts allow-same-origin allow-forms"
+      allowfullscreen></iframe>
+  </div>
 
   <script>
     const p       = new URLSearchParams(location.search);
