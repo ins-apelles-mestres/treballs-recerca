@@ -57,6 +57,7 @@ initLogin();
     premi:       'Ha guanyat premi i quin',
     resum:       'Resum',
     paraulesClau:'Paraules Clau',
+    imatgePortada:'Imatge portada',
   };
   // ─────────────────────────────────────────────────────────────────────────────
 
@@ -102,6 +103,7 @@ initLogin();
       premi:        cel(cels, idx.premi),
       resum:        cel(cels, idx.resum),
       paraulesClau: cel(cels, idx.paraulesClau),
+      imatgePortada:cel(cels, idx.imatgePortada),
     })).filter(t => t.titol);
   }
 
@@ -253,7 +255,7 @@ initLogin();
   function htmlCard(t) {
     const badgePremi = badgeCard(t.premi);
 
-    const thumb = thumbnailUrl(t.pdf);
+    const thumb = t.imatgePortada || thumbnailUrl(t.pdf);
     const portada = thumb
       ? `<a class="card-portada" href="${escHtml(t.pdf)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
            <img src="${thumb}" alt="Portada de ${escHtml(t.titol)}" loading="lazy"
