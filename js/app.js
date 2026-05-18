@@ -80,42 +80,52 @@ initLogin();
   }
 
   function parseCSV(text) {
-    const lines = text.trim().split('\n').map(l => l.trimEnd());
-    if (lines.length < 2) return [];
+    const files = parseCSVComplet(text);
+    if (files.length < 2) return [];
 
-    const headers = parseLinia(lines[0]);
+    const headers = files[0];
     const idx = {};
     Object.entries(COLS).forEach(([clau, nom]) => {
       const i = headers.findIndex(h => normalitzaText(h) === normalitzaText(nom));
       idx[clau] = i;
     });
 
-    return lines.slice(1).map(linia => {
-      const cels = parseLinia(linia);
-      return {
-        titol:     cel(cels, idx.titol),
-        autor:     cel(cels, idx.autor),
-        tutor:     cel(cels, idx.tutor),
-        pdf:       cel(cels, idx.pdf),
-        any:       parseInt(cel(cels, idx.any), 10) || 0,
-        optaPremi: normalitzaBolea(cel(cels, idx.optaPremi)),
-        premi:     cel(cels, idx.premi),
-      };
-    }).filter(t => t.titol);
+    return files.slice(1).map(cels => ({
+      titol:     cel(cels, idx.titol),
+      autor:     cel(cels, idx.autor),
+      tutor:     cel(cels, idx.tutor),
+      pdf:       cel(cels, idx.pdf),
+      any:       parseInt(cel(cels, idx.any), 10) || 0,
+      optaPremi: normalitzaBolea(cel(cels, idx.optaPremi)),
+      premi:     cel(cels, idx.premi),
+    })).filter(t => t.titol);
   }
 
-  function parseLinia(linia) {
-    const cels = [];
-    let dins = false, actual = '';
-    for (let i = 0; i < linia.length; i++) {
-      const c = linia[i];
-      if (c === '"' && linia[i + 1] === '"') { actual += '"'; i++; }
-      else if (c === '"') { dins = !dins; }
-      else if (c === ',' && !dins) { cels.push(actual.trim()); actual = ''; }
-      else { actual += c; }
+  function parseCSVComplet(text) {
+    const files = [];
+    let fila = [], camp = '', entreCometes = false;
+
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (entreCometes) {
+        if (c === '"' && text[i + 1] === '"') { camp += '"'; i++; }
+        else if (c === '"') { entreCometes = false; }
+        else { camp += c; }
+      } else {
+        if (c === '"') { entreCometes = true; }
+        else if (c === ',') { fila.push(camp.trim()); camp = ''; }
+        else if (c === '\n') {
+          fila.push(camp.trim()); camp = '';
+          if (fila.some(f => f !== '')) files.push(fila);
+          fila = [];
+        } else if (c !== '\r') { camp += c; }
+      }
     }
-    cels.push(actual.trim());
-    return cels;
+    if (camp || fila.length > 0) {
+      fila.push(camp.trim());
+      if (fila.some(f => f !== '')) files.push(fila);
+    }
+    return files;
   }
 
   function cel(cels, i) { return (i >= 0 && i < cels.length) ? cels[i].replace(/^"|"$/g, '').trim() : ''; }
