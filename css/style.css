@@ -2,8 +2,8 @@
    Variables — canvia els colors aquí
    ============================================= */
 :root {
-  --color-primari:   #f0a500;
-  --color-primari-c: #d49000;
+  --color-primari:   #e89400;
+  --color-primari-c: #c87800;
   --color-accent:    #7a1a3a;
   --color-accent-c:  #651530;
   --color-fons:      #f4f6f9;
@@ -40,7 +40,7 @@ a { color: inherit; }
    Header
    ============================================= */
 header {
-  background: linear-gradient(135deg, #e89800 0%, #f0a500 40%, #f5b830 70%, #e09200 100%);
+  background: linear-gradient(135deg, #d98200 0%, #e89400 40%, #f0a500 70%, #cf7600 100%);
   color: #1a1a1a;
   padding: 2rem 1.5rem 0;
   position: relative;
