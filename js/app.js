@@ -360,23 +360,8 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
       const tag = e.target.closest('.tag-clau');
       if (!tag) return;
       document.getElementById('cerca').value = tag.textContent.trim();
-      document.getElementById('btn-esborra-cerca').hidden = false;
       aplicarFiltres();
       document.querySelector('.seccio-principal').scrollIntoView({ behavior: 'smooth' });
-    });
-
-    const inputCerca = document.getElementById('cerca');
-    const btnEsborra = document.getElementById('btn-esborra-cerca');
-
-    inputCerca.addEventListener('input', function () {
-      btnEsborra.hidden = !this.value;
-    });
-
-    btnEsborra.addEventListener('click', function () {
-      inputCerca.value = '';
-      btnEsborra.hidden = true;
-      aplicarFiltres();
-      inputCerca.focus();
     });
   }
 
