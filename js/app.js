@@ -37,12 +37,30 @@ function logout() {
 
 initLogin();
 
-// ─── VISOR PDF ────────────────────────────────────────────────────────────────
-function obrirPDF(pdfUrl, titol) {
-  const params = new URLSearchParams({ url: pdfUrl });
-  if (titol) params.set('titol', titol);
-  window.location.href = 'visor.html?' + params.toString();
+// ─── MODAL PDF ────────────────────────────────────────────────────────────────
+function obrirPDF(pdfUrl, titol, autor, tutor) {
+  const m = (pdfUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || pdfUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/));
+  const src = m
+    ? `https://drive.google.com/file/d/${m[1]}/preview`
+    : `https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`;
+
+  document.getElementById('pdf-iframe').src = src;
+  document.getElementById('pdf-modal-titol').textContent = titol || '';
+  const meta = [autor && `Autor/a: ${autor}`, tutor && `Tutor/a: ${tutor}`].filter(Boolean).join('  ·  ');
+  document.getElementById('pdf-modal-meta').textContent = meta;
+  document.getElementById('pdf-modal').hidden = false;
+  document.body.style.overflow = 'hidden';
 }
+
+function tancarPDF() {
+  document.getElementById('pdf-modal').hidden = true;
+  document.getElementById('pdf-iframe').src = '';
+  document.body.style.overflow = '';
+}
+
+document.getElementById('pdf-modal-tancar').addEventListener('click', tancarPDF);
+document.getElementById('pdf-modal-fons').addEventListener('click', tancarPDF);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') tancarPDF(); });
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ─── COMPTADOR DE VISITES ─────────────────────────────────────────────────────
@@ -283,7 +301,7 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
       : `<div class="card-portada card-portada--error" aria-hidden="true"></div>`;
 
     const btnPdf = t.pdf
-      ? `<button class="btn-pdf" data-pdf-url="${escHtml(t.pdf)}" data-pdf-titol="${escHtml(t.titol)}">
+      ? `<button class="btn-pdf" data-pdf-url="${escHtml(t.pdf)}" data-pdf-titol="${escHtml(t.titol)}" data-pdf-autor="${escHtml(t.autor)}" data-pdf-tutor="${escHtml(t.tutor)}">
            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
            Veure PDF
          </button>`
@@ -337,7 +355,7 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
       const celPremi = badgeTaula(t.premi);
 
       const celPdf = t.pdf
-        ? `<button class="btn-pdf-taula" data-pdf-url="${escHtml(t.pdf)}">PDF</button>`
+        ? `<button class="btn-pdf-taula" data-pdf-url="${escHtml(t.pdf)}" data-pdf-titol="${escHtml(t.titol)}" data-pdf-autor="${escHtml(t.autor)}" data-pdf-tutor="${escHtml(t.tutor)}">PDF</button>`
         : `<span class="btn-pdf-taula desactivat">—</span>`;
 
       return `<tr>
@@ -375,7 +393,7 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
     document.addEventListener('click', function(e) {
       const btn = e.target.closest('[data-pdf-url]');
       if (!btn) return;
-      obrirPDF(btn.dataset.pdfUrl, btn.dataset.pdfTitol);
+      obrirPDF(btn.dataset.pdfUrl, btn.dataset.pdfTitol, btn.dataset.pdfAutor, btn.dataset.pdfTutor);
     });
   }
 

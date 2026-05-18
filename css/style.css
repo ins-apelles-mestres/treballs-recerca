@@ -773,6 +773,96 @@ th:not([aria-sort]) .icona-ordre::after { content: ' ↕'; }
 }
 
 /* =============================================
+   Modal PDF
+   ============================================= */
+#pdf-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.pdf-modal-fons {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  cursor: pointer;
+}
+
+.pdf-modal-finestra {
+  position: relative;
+  width: 100%;
+  max-width: 920px;
+  height: 92vh;
+  background: #fff;
+  border-radius: var(--radi-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 64px rgba(0,0,0,.45);
+}
+
+.pdf-modal-cap {
+  background: linear-gradient(to bottom, #f0a010 0%, #e08c00 100%);
+  padding: .75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.pdf-modal-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.pdf-modal-titol {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pdf-modal-meta {
+  font-size: .8rem;
+  color: rgba(0,0,0,.6);
+  margin-top: .1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pdf-modal-tancar {
+  flex-shrink: 0;
+  background: rgba(0,0,0,.15);
+  color: #1a1a1a;
+  border: none;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s;
+}
+
+.pdf-modal-tancar:hover { background: rgba(0,0,0,.28); }
+
+.pdf-iframe {
+  flex: 1;
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+
+/* =============================================
    Login
    ============================================= */
 #login-overlay {
