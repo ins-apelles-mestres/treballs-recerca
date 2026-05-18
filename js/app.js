@@ -36,6 +36,16 @@ function logout() {
 }
 
 initLogin();
+
+// ─── COMPTADOR DE VISITES ─────────────────────────────────────────────────────
+fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/hit')
+  .then(r => r.json())
+  .then(d => {
+    if (!d || !d.count) return;
+    document.getElementById('stat-visites').textContent = d.count.toLocaleString('ca-ES');
+    document.getElementById('visites-wrap').hidden = false;
+  })
+  .catch(() => {});
 // ─────────────────────────────────────────────────────────────────────────────
 
 (function () {
