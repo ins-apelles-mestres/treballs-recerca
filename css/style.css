@@ -49,6 +49,16 @@ header {
   max-width: 1200px;
   margin: 0 auto;
   padding-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.header-logo {
+  height: 70px;
+  width: auto;
+  mix-blend-mode: multiply;
+  flex-shrink: 0;
 }
 
 header h1 {
