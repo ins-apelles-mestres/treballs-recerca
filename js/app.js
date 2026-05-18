@@ -38,7 +38,7 @@ function logout() {
 initLogin();
 
 // ─── COMPTADOR DE VISITES ─────────────────────────────────────────────────────
-fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/hit')
+fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
   .then(r => r.json())
   .then(d => {
     if (!d || !d.count) return;
