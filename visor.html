@@ -6,22 +6,26 @@
   <title>Visor PDF — Treballs de Recerca</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       display: flex;
       flex-direction: column;
       height: 100vh;
       font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-      background: #1a1a2e;
+      background: #f4f6f9;
     }
+
+    /* Capçalera burdeos */
     .visor-cap {
       background: #7a1a3a;
       color: #fff;
-      padding: .6rem 1.25rem;
+      padding: .85rem 1.5rem;
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 1.25rem;
       flex-shrink: 0;
     }
+
     .btn-tornar {
       display: inline-flex;
       align-items: center;
@@ -29,69 +33,95 @@
       background: rgba(255,255,255,.15);
       border: none;
       color: #fff;
-      padding: .4rem .9rem;
+      padding: .45rem 1rem;
       border-radius: 6px;
       cursor: pointer;
       font-size: .88rem;
       font-family: inherit;
+      font-weight: 600;
       white-space: nowrap;
+      flex-shrink: 0;
       transition: background .15s;
-      text-decoration: none;
     }
     .btn-tornar:hover { background: rgba(255,255,255,.28); }
+
+    .visor-info {
+      flex: 1;
+      min-width: 0;
+    }
+
     .visor-titol {
-      font-size: .95rem;
-      font-weight: 600;
-      opacity: .9;
+      font-size: 1.05rem;
+      font-weight: 700;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
+      color: #fff;
     }
-    iframe {
+
+    .visor-meta {
+      font-size: .8rem;
+      color: rgba(255,255,255,.65);
+      margin-top: .15rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .visor-logo {
+      height: 48px;
+      width: auto;
+      mix-blend-mode: screen;
+      opacity: .85;
+      flex-shrink: 0;
+    }
+
+    /* Iframe ocupa tota la resta */
+    .visor-iframe {
       flex: 1;
       border: none;
       width: 100%;
-      height: 100%;
+      display: block;
     }
-    .visor-error {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: rgba(255,255,255,.5);
-      font-size: 1rem;
-    }
+
+    /* Impedeix impressió */
+    @media print { body { display: none !important; } }
   </style>
 </head>
 <body>
   <div class="visor-cap">
     <button class="btn-tornar" onclick="history.back()">&#8592; Tornar</button>
-    <span class="visor-titol" id="visor-titol">Treballs de Recerca</span>
+    <div class="visor-info">
+      <p class="visor-titol" id="visor-titol">Treballs de Recerca</p>
+      <p class="visor-meta"  id="visor-meta"></p>
+    </div>
+    <img src="img/logo.png" alt="INS Apel·les Mestres" class="visor-logo">
   </div>
-  <div class="visor-error" id="visor-error" style="display:none">
-    No s'ha pogut carregar el document.
-  </div>
-  <iframe id="visor-iframe" allowfullscreen></iframe>
+  <iframe id="visor-iframe" class="visor-iframe"
+    sandbox="allow-scripts allow-same-origin allow-forms"
+    allowfullscreen></iframe>
 
   <script>
-    const params = new URLSearchParams(location.search);
-    const pdfUrl = params.get('url') || '';
-    const titol  = params.get('titol') || '';
+    const p       = new URLSearchParams(location.search);
+    const pdfUrl  = p.get('url')   || '';
+    const titol   = p.get('titol') || '';
+    const autor   = p.get('autor') || '';
+    const tutor   = p.get('tutor') || '';
 
     if (titol) {
       document.getElementById('visor-titol').textContent = titol;
       document.title = titol + ' — Treballs de Recerca';
     }
 
+    const parts = [autor && 'Autor/a: ' + autor, tutor && 'Tutor/a: ' + tutor].filter(Boolean);
+    if (parts.length) document.getElementById('visor-meta').textContent = parts.join('  ·  ');
+
     if (pdfUrl) {
-      const m = pdfUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || pdfUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      const m   = pdfUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || pdfUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
       const src = m
         ? 'https://drive.google.com/file/d/' + m[1] + '/preview'
         : 'https://docs.google.com/viewer?url=' + encodeURIComponent(pdfUrl) + '&embedded=true';
       document.getElementById('visor-iframe').src = src;
-    } else {
-      document.getElementById('visor-iframe').style.display = 'none';
-      document.getElementById('visor-error').style.display = 'flex';
     }
   </script>
 </body>

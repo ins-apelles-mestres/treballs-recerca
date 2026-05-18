@@ -37,30 +37,14 @@ function logout() {
 
 initLogin();
 
-// ─── MODAL PDF ────────────────────────────────────────────────────────────────
+// ─── VISOR PDF ────────────────────────────────────────────────────────────────
 function obrirPDF(pdfUrl, titol, autor, tutor) {
-  const m = (pdfUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || pdfUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/));
-  const src = m
-    ? `https://drive.google.com/file/d/${m[1]}/preview`
-    : `https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`;
-
-  document.getElementById('pdf-iframe').src = src;
-  document.getElementById('pdf-modal-titol').textContent = titol || '';
-  const meta = [autor && `Autor/a: ${autor}`, tutor && `Tutor/a: ${tutor}`].filter(Boolean).join('  ·  ');
-  document.getElementById('pdf-modal-meta').textContent = meta;
-  document.getElementById('pdf-modal').hidden = false;
-  document.body.style.overflow = 'hidden';
+  const params = new URLSearchParams({ url: pdfUrl });
+  if (titol) params.set('titol', titol);
+  if (autor)  params.set('autor', autor);
+  if (tutor)  params.set('tutor', tutor);
+  window.location.href = 'visor.html?' + params.toString();
 }
-
-function tancarPDF() {
-  document.getElementById('pdf-modal').hidden = true;
-  document.getElementById('pdf-iframe').src = '';
-  document.body.style.overflow = '';
-}
-
-document.getElementById('pdf-modal-tancar').addEventListener('click', tancarPDF);
-document.getElementById('pdf-modal-fons').addEventListener('click', tancarPDF);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') tancarPDF(); });
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ─── COMPTADOR DE VISITES ─────────────────────────────────────────────────────
