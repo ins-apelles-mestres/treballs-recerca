@@ -1,0 +1,329 @@
+(function () {
+  'use strict';
+
+  // ─── CONFIGURACIÓ ────────────────────────────────────────────────────────────
+  // Enganxa aquí l'URL del teu full de càlcul publicat com a CSV
+  const CSV_URL = 'ENGANXA_AQUÍ_LA_URL_DEL_CSV';
+  const N_RECENTS = 5; // quants treballs mostrar a la secció "recents"
+
+  // Noms exactes de les columnes al full de càlcul
+  const COLS = {
+    titol:     'Títol',
+    autor:     'Autor',
+    tutor:     'Tutor',
+    pdf:       'Enllaç PDF',
+    any:       'Any de defensa',
+    optaPremi: 'Ha optat a premi',
+    premi:     'Ha guanyat premi i quin',
+  };
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  let dades = [];
+  let dadsFiltrades = [];
+  let vistActual = 'cards';
+  let ordenCol = null;
+  let ordenDir = 'asc';
+
+  // ─── FETCH I PARSE ───────────────────────────────────────────────────────────
+
+  async function fetchData() {
+    try {
+      const resp = await fetch(CSV_URL);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const text = await resp.text();
+      dades = parseCSV(text);
+      if (dades.length === 0) throw new Error('El full de càlcul sembla buit o els noms de columna no coincideixen.');
+      init();
+    } catch (err) {
+      mostrarError(err.message);
+    }
+  }
+
+  function parseCSV(text) {
+    const lines = text.trim().split('\n').map(l => l.trimEnd());
+    if (lines.length < 2) return [];
+
+    const headers = parseLinia(lines[0]);
+    const idx = {};
+    Object.entries(COLS).forEach(([clau, nom]) => {
+      const i = headers.findIndex(h => normalitzaText(h) === normalitzaText(nom));
+      idx[clau] = i;
+    });
+
+    return lines.slice(1).map(linia => {
+      const cels = parseLinia(linia);
+      return {
+        titol:     cel(cels, idx.titol),
+        autor:     cel(cels, idx.autor),
+        tutor:     cel(cels, idx.tutor),
+        pdf:       cel(cels, idx.pdf),
+        any:       parseInt(cel(cels, idx.any), 10) || 0,
+        optaPremi: normalitzaBolea(cel(cels, idx.optaPremi)),
+        premi:     cel(cels, idx.premi),
+      };
+    }).filter(t => t.titol);
+  }
+
+  function parseLinia(linia) {
+    const cels = [];
+    let dins = false, actual = '';
+    for (let i = 0; i < linia.length; i++) {
+      const c = linia[i];
+      if (c === '"' && linia[i + 1] === '"') { actual += '"'; i++; }
+      else if (c === '"') { dins = !dins; }
+      else if (c === ',' && !dins) { cels.push(actual.trim()); actual = ''; }
+      else { actual += c; }
+    }
+    cels.push(actual.trim());
+    return cels;
+  }
+
+  function cel(cels, i) { return (i >= 0 && i < cels.length) ? cels[i].replace(/^"|"$/g, '').trim() : ''; }
+  function normalitzaText(s) { return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim(); }
+  function normalitzaBolea(s) { return ['sí', 'si', 'yes', 'true', '1', 's'].includes(normalitzaText(s)); }
+
+  // ─── INICIALITZACIÓ ───────────────────────────────────────────────────────────
+
+  function init() {
+    omplirFiltreAny();
+    dadsFiltrades = [...dades];
+    renderRecents();
+    renderCards(dadsFiltrades);
+    renderTaula(dadsFiltrades);
+    actualitzarStats();
+    actualitzarComptador();
+    setupFiltres();
+    document.getElementById('timestamp').textContent = new Date().toLocaleString('ca');
+  }
+
+  // ─── RECENTS ─────────────────────────────────────────────────────────────────
+
+  function renderRecents() {
+    const anyMax = Math.max(...dades.map(t => t.any).filter(Boolean));
+    const recents = dades
+      .filter(t => t.any === anyMax)
+      .slice(0, N_RECENTS);
+    const cont = document.getElementById('recents-scroll');
+    if (recents.length === 0) {
+      cont.innerHTML = '<p class="loading">No hi ha treballs recents.</p>';
+      return;
+    }
+    cont.innerHTML = recents.map(t => htmlCard(t)).join('');
+  }
+
+  // ─── TARGETES ─────────────────────────────────────────────────────────────────
+
+  function renderCards(llista) {
+    const cont = document.getElementById('vista-cards');
+    if (llista.length === 0) {
+      cont.innerHTML = '';
+      document.getElementById('missatge-buit').hidden = false;
+      return;
+    }
+    document.getElementById('missatge-buit').hidden = true;
+    cont.innerHTML = llista.map(t => htmlCard(t)).join('');
+  }
+
+  function htmlCard(t) {
+    const badgePremi = t.premi
+      ? `<span class="card-badge-premi">★ ${escHtml(t.premi)}</span>`
+      : (t.optaPremi ? `<span class="card-badge-opta">Finalista / Optant</span>` : '');
+
+    const btnPdf = t.pdf
+      ? `<a class="btn-pdf" href="${escHtml(t.pdf)}" target="_blank" rel="noopener">
+           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+           Veure PDF
+         </a>`
+      : `<span class="btn-pdf" aria-disabled="true">Sense PDF</span>`;
+
+    return `
+      <article class="card">
+        ${badgePremi}
+        <h3 class="card-titol">${escHtml(t.titol)}</h3>
+        <div class="card-meta">
+          <span><strong>Autor:</strong> ${escHtml(t.autor)}</span>
+          <span><strong>Tutor:</strong> ${escHtml(t.tutor)}</span>
+        </div>
+        <div class="card-peu">
+          ${t.any ? `<span class="card-any">${t.any}</span>` : '<span></span>'}
+          ${btnPdf}
+        </div>
+      </article>`;
+  }
+
+  // ─── TAULA ────────────────────────────────────────────────────────────────────
+
+  function renderTaula(llista) {
+    const cos = document.getElementById('taula-cos');
+    if (llista.length === 0) {
+      cos.innerHTML = '';
+      return;
+    }
+    cos.innerHTML = llista.map(t => {
+      const celPremi = t.premi
+        ? `<span class="badge-premi-taula">★ ${escHtml(t.premi)}</span>`
+        : (t.optaPremi ? `<span class="badge-opta-taula">Optant</span>` : '—');
+
+      const celPdf = t.pdf
+        ? `<a class="btn-pdf-taula" href="${escHtml(t.pdf)}" target="_blank" rel="noopener">PDF</a>`
+        : `<span class="btn-pdf-taula desactivat">—</span>`;
+
+      return `<tr>
+        <td>${escHtml(t.titol)}</td>
+        <td>${escHtml(t.autor)}</td>
+        <td>${escHtml(t.tutor)}</td>
+        <td>${t.any || '—'}</td>
+        <td>${celPremi}</td>
+        <td>${celPdf}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ─── FILTRES I CERCA ─────────────────────────────────────────────────────────
+
+  function setupFiltres() {
+    document.getElementById('cerca').addEventListener('input', aplicarFiltres);
+    document.getElementById('filtre-any').addEventListener('change', aplicarFiltres);
+    document.getElementById('filtre-premi').addEventListener('change', aplicarFiltres);
+    document.getElementById('btn-cards').addEventListener('click', () => canviarVista('cards'));
+    document.getElementById('btn-taula').addEventListener('click', () => canviarVista('taula'));
+
+    document.querySelectorAll('.taula-treballs th.ordenable').forEach(th => {
+      th.addEventListener('click', () => ordenaColumna(th.dataset.col));
+    });
+  }
+
+  function aplicarFiltres() {
+    const q = normalitzaText(document.getElementById('cerca').value);
+    const any = document.getElementById('filtre-any').value;
+    const premi = document.getElementById('filtre-premi').value;
+
+    dadsFiltrades = dades.filter(t => {
+      if (q && !normalitzaText(t.titol).includes(q) &&
+               !normalitzaText(t.autor).includes(q) &&
+               !normalitzaText(t.tutor).includes(q)) return false;
+      if (any && t.any !== parseInt(any, 10)) return false;
+      if (premi === 'guanyadors' && !t.premi) return false;
+      if (premi === 'optants' && !t.optaPremi && !t.premi) return false;
+      return true;
+    });
+
+    if (ordenCol) dadsFiltrades = ordena(dadsFiltrades, ordenCol, ordenDir);
+
+    renderCards(dadsFiltrades);
+    renderTaula(dadsFiltrades);
+    actualitzarComptador();
+
+    const buit = dadsFiltrades.length === 0;
+    document.getElementById('missatge-buit').hidden = !buit || vistActual !== 'cards';
+  }
+
+  function omplirFiltreAny() {
+    const anys = [...new Set(dades.map(t => t.any).filter(Boolean))].sort((a, b) => b - a);
+    const sel = document.getElementById('filtre-any');
+    anys.forEach(a => {
+      const opt = document.createElement('option');
+      opt.value = a;
+      opt.textContent = a;
+      sel.appendChild(opt);
+    });
+  }
+
+  // ─── ORDENACIÓ TAULA ─────────────────────────────────────────────────────────
+
+  function ordenaColumna(col) {
+    if (ordenCol === col) {
+      ordenDir = ordenDir === 'asc' ? 'desc' : 'asc';
+    } else {
+      ordenCol = col;
+      ordenDir = 'asc';
+    }
+
+    document.querySelectorAll('.taula-treballs th[data-col]').forEach(th => {
+      th.removeAttribute('aria-sort');
+    });
+    const th = document.querySelector(`.taula-treballs th[data-col="${col}"]`);
+    if (th) th.setAttribute('aria-sort', ordenDir === 'asc' ? 'ascending' : 'descending');
+
+    dadsFiltrades = ordena(dadsFiltrades, ordenCol, ordenDir);
+    renderTaula(dadsFiltrades);
+  }
+
+  function ordena(llista, col, dir) {
+    return [...llista].sort((a, b) => {
+      let va = a[col] ?? '', vb = b[col] ?? '';
+      if (col === 'any') { va = va || 0; vb = vb || 0; }
+      else { va = String(va).toLowerCase(); vb = String(vb).toLowerCase(); }
+      if (va < vb) return dir === 'asc' ? -1 : 1;
+      if (va > vb) return dir === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }
+
+  // ─── TOGGLE DE VISTA ─────────────────────────────────────────────────────────
+
+  function canviarVista(vista) {
+    vistActual = vista;
+    const esCards = vista === 'cards';
+    document.getElementById('vista-cards').hidden = !esCards;
+    document.getElementById('vista-taula').hidden = esCards;
+    document.getElementById('btn-cards').classList.toggle('actiu', esCards);
+    document.getElementById('btn-taula').classList.toggle('actiu', !esCards);
+    document.getElementById('btn-cards').setAttribute('aria-pressed', esCards);
+    document.getElementById('btn-taula').setAttribute('aria-pressed', !esCards);
+    document.getElementById('missatge-buit').hidden = dadsFiltrades.length > 0 || !esCards;
+  }
+
+  // ─── STATS I COMPTADORS ───────────────────────────────────────────────────────
+
+  function actualitzarStats() {
+    const total = dades.length;
+    const premiats = dades.filter(t => t.premi).length;
+    const anys = dades.map(t => t.any).filter(Boolean);
+    const rang = anys.length
+      ? (Math.min(...anys) === Math.max(...anys)
+          ? Math.min(...anys)
+          : `${Math.min(...anys)}–${Math.max(...anys)}`)
+      : '—';
+
+    document.getElementById('stat-total').textContent = `${total} treball${total !== 1 ? 's' : ''}`;
+    document.getElementById('stat-premiats').textContent = `${premiats} premiat${premiats !== 1 ? 's' : ''}`;
+    document.getElementById('stat-anys').textContent = rang;
+  }
+
+  function actualitzarComptador() {
+    const n = dadsFiltrades.length;
+    const total = dades.length;
+    document.getElementById('comptador').textContent =
+      n === total
+        ? `${total} treball${total !== 1 ? 's' : ''}`
+        : `Mostrant ${n} de ${total} treballs`;
+  }
+
+  // ─── ERRORS ───────────────────────────────────────────────────────────────────
+
+  function mostrarError(msg) {
+    document.getElementById('recents-scroll').innerHTML = '';
+    document.getElementById('missatge-error').hidden = false;
+    document.getElementById('error-detall').textContent = msg;
+  }
+
+  // ─── UTILITATS ────────────────────────────────────────────────────────────────
+
+  function escHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // ─── ARRENCADA ────────────────────────────────────────────────────────────────
+
+  if (CSV_URL === 'ENGANXA_AQUÍ_LA_URL_DEL_CSV') {
+    mostrarError('Cal configurar l\'URL del full de càlcul a js/app.js (variable CSV_URL).');
+  } else {
+    fetchData();
+  }
+
+})();

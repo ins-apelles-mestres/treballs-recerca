@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Treballs de Recerca de l'Institut">
+  <title>Treballs de Recerca — INS Apel·les Mestres</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <h1>Treballs de Recerca</h1>
+      <p class="header-subtitol">INS Apel·les Mestres</p>
+    </div>
+    <div class="stats-bar" id="stats-bar">
+      <span id="stat-total">— treballs</span>
+      <span class="sep">·</span>
+      <span id="stat-premiats">— premiats</span>
+      <span class="sep">·</span>
+      <span id="stat-anys">——</span>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="seccio-recents" id="seccio-recents">
+      <h2 class="seccio-titol">Treballs recents</h2>
+      <div class="recents-scroll" id="recents-scroll">
+        <div class="loading">Carregant dades...</div>
+      </div>
+    </section>
+
+    <section class="seccio-principal">
+      <div class="controls">
+        <div class="controls-fila-1">
+          <input
+            type="search"
+            id="cerca"
+            placeholder="Cerca per títol, autor o tutor..."
+            aria-label="Cerca treballs"
+          >
+        </div>
+        <div class="controls-fila-2">
+          <select id="filtre-any" aria-label="Filtre per any">
+            <option value="">Tots els anys</option>
+          </select>
+          <select id="filtre-premi" aria-label="Filtre per premi">
+            <option value="">Tots els treballs</option>
+            <option value="guanyadors">Només guanyadors</option>
+            <option value="optants">Han optat a premi</option>
+          </select>
+          <div class="toggle-vista" role="group" aria-label="Canviar vista">
+            <button id="btn-cards" class="btn-vista actiu" aria-pressed="true" title="Vista targetes">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+              Targetes
+            </button>
+            <button id="btn-taula" class="btn-vista" aria-pressed="false" title="Vista taula">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+              Taula
+            </button>
+          </div>
+        </div>
+        <p class="comptador" id="comptador"></p>
+      </div>
+
+      <div id="vista-cards" class="grid-cards"></div>
+
+      <div id="vista-taula" class="contenidor-taula" hidden>
+        <table class="taula-treballs" id="taula-treballs">
+          <thead>
+            <tr>
+              <th data-col="titol" class="ordenable">Títol <span class="icona-ordre"></span></th>
+              <th data-col="autor" class="ordenable">Autor <span class="icona-ordre"></span></th>
+              <th data-col="tutor" class="ordenable">Tutor <span class="icona-ordre"></span></th>
+              <th data-col="any" class="ordenable">Any <span class="icona-ordre"></span></th>
+              <th data-col="premi" class="ordenable">Premi <span class="icona-ordre"></span></th>
+              <th>PDF</th>
+            </tr>
+          </thead>
+          <tbody id="taula-cos"></tbody>
+        </table>
+      </div>
+
+      <div id="missatge-buit" class="missatge-buit" hidden>
+        No s'han trobat treballs amb els filtres actuals.
+      </div>
+
+      <div id="missatge-error" class="missatge-error" hidden>
+        <strong>Error en carregar les dades.</strong><br>
+        Comprova que l'URL del full de càlcul és correcta i que el document és públic.<br>
+        <small id="error-detall"></small>
+      </div>
+
+    </section>
+  </main>
+
+  <footer>
+    <p>Dades carregades des de Google Sheets · <span id="timestamp"></span></p>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
