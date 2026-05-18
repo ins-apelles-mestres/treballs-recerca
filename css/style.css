@@ -712,6 +712,67 @@ th:not([aria-sort]) .icona-ordre::after { content: ' ↕'; }
 }
 
 /* =============================================
+   Modal PDF
+   ============================================= */
+#pdf-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.pdf-modal-fons {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  cursor: pointer;
+}
+
+.pdf-modal-finestra {
+  position: relative;
+  width: 100%;
+  max-width: 860px;
+  height: 90vh;
+  background: #fff;
+  border-radius: var(--radi-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,.4);
+}
+
+.pdf-modal-tancar {
+  position: absolute;
+  top: .6rem;
+  right: .6rem;
+  z-index: 10;
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  font-size: .95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s;
+}
+
+.pdf-modal-tancar:hover { background: rgba(0,0,0,.8); }
+
+.pdf-iframe {
+  flex: 1;
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+
+/* =============================================
    Login
    ============================================= */
 #login-overlay {

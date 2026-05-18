@@ -37,6 +37,28 @@ function logout() {
 
 initLogin();
 
+// ─── MODAL PDF ────────────────────────────────────────────────────────────────
+function obrirPDF(pdfUrl) {
+  const id = (pdfUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || pdfUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/) || [])[1];
+  const src = id
+    ? `https://drive.google.com/file/d/${id}/preview`
+    : `https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`;
+  document.getElementById('pdf-iframe').src = src;
+  document.getElementById('pdf-modal').hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+
+function tancarPDF() {
+  document.getElementById('pdf-modal').hidden = true;
+  document.getElementById('pdf-iframe').src = '';
+  document.body.style.overflow = '';
+}
+
+document.getElementById('pdf-modal-tancar').addEventListener('click', tancarPDF);
+document.getElementById('pdf-modal-fons').addEventListener('click', tancarPDF);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') tancarPDF(); });
+// ─────────────────────────────────────────────────────────────────────────────
+
 // ─── COMPTADOR DE VISITES ─────────────────────────────────────────────────────
 fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
   .then(r => r.json())
@@ -275,10 +297,10 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
       : `<div class="card-portada card-portada--error" aria-hidden="true"></div>`;
 
     const btnPdf = t.pdf
-      ? `<a class="btn-pdf" href="${escHtml(t.pdf)}" target="_blank" rel="noopener">
+      ? `<button class="btn-pdf" data-pdf-url="${escHtml(t.pdf)}">
            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
            Veure PDF
-         </a>`
+         </button>`
       : `<span class="btn-pdf" aria-disabled="true">Sense PDF</span>`;
 
     const respostaDors = t.resum
@@ -329,7 +351,7 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
       const celPremi = badgeTaula(t.premi);
 
       const celPdf = t.pdf
-        ? `<a class="btn-pdf-taula" href="${escHtml(t.pdf)}" target="_blank" rel="noopener">PDF</a>`
+        ? `<button class="btn-pdf-taula" data-pdf-url="${escHtml(t.pdf)}">PDF</button>`
         : `<span class="btn-pdf-taula desactivat">—</span>`;
 
       return `<tr>
@@ -362,6 +384,12 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
       document.getElementById('cerca').value = tag.textContent.trim();
       aplicarFiltres();
       document.querySelector('.seccio-principal').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.addEventListener('click', function(e) {
+      const btn = e.target.closest('[data-pdf-url]');
+      if (!btn) return;
+      obrirPDF(btn.dataset.pdfUrl);
     });
   }
 
@@ -459,7 +487,7 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
           .forEach(c => c.classList.remove('flipped'));
         return;
       }
-      if (e.target.closest('.card-back .btn-pdf')) return;
+      if (e.target.closest('[data-pdf-url]')) return;
       if (e.target.closest('.tag-clau')) return;
       e.preventDefault();
       const jaFlipped = contenidor.classList.contains('flipped');
