@@ -169,7 +169,7 @@
     const portada = thumb
       ? `<a class="card-portada" href="${escHtml(t.pdf)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
            <img src="${thumb}" alt="Portada de ${escHtml(t.titol)}" loading="lazy"
-                onerror="this.closest('.card-portada').classList.add('card-portada--error')">
+                onerror="this.style.display='none'; this.closest('.card-portada').classList.add('card-portada--error')">
          </a>`
       : `<div class="card-portada card-portada--error" aria-hidden="true"></div>`;
 
