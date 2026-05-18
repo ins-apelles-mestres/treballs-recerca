@@ -40,7 +40,7 @@ a { color: inherit; }
    Header
    ============================================= */
 header {
-  background: linear-gradient(to bottom, #c98510 0%, #b37208 100%);
+  background: linear-gradient(to bottom, #f0a010 0%, #e08c00 100%);
   color: #1a1a1a;
   padding: 2rem 1.5rem 0;
   position: relative;
