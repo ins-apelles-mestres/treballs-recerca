@@ -828,9 +828,27 @@ th:not([aria-sort]) .icona-ordre::after { content: ' ↕'; }
 footer {
   background: var(--color-accent);
   color: rgba(255,255,255,.6);
-  text-align: center;
-  padding: 1rem;
+  padding: .85rem 1.5rem;
   font-size: .82rem;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer-centre {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+.footer-dreta {
+  text-align: right;
 }
 
 /* =============================================

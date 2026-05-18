@@ -139,7 +139,16 @@
   </main>
 
   <footer>
-    <p>Dades carregades des de Google Sheets · <span id="timestamp"></span> · <span id="visites-wrap" hidden><span id="stat-visites"></span> visites · </span><button class="btn-logout" onclick="logout()">Tancar sessió</button></p>
+    <div class="footer-inner">
+      <div class="footer-esquerra"></div>
+      <div class="footer-centre">
+        <span id="timestamp"></span>
+        <button class="btn-logout" onclick="logout()">Tancar sessió</button>
+      </div>
+      <div class="footer-dreta">
+        <span id="visites-wrap" hidden><span id="stat-visites"></span> visites</span>
+      </div>
+    </div>
   </footer>
 
   </div> <!-- fi contingut-principal -->
