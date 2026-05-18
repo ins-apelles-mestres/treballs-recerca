@@ -155,7 +155,7 @@ initLogin();
   function init() {
     omplirFiltreAny();
     dadsFiltrades = [...dades];
-    renderRecents();
+    renderDestacats();
     renderCards(dadsFiltrades);
     renderTaula(dadsFiltrades);
     actualitzarStats();
