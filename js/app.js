@@ -148,6 +148,7 @@ initLogin();
     actualitzarComptador();
     setupFiltres();
     setupToggleRecents();
+    setupFlipTactil();
     document.getElementById('timestamp').textContent = new Date().toLocaleString('ca');
   }
 
@@ -409,6 +410,26 @@ initLogin();
     document.getElementById('btn-cards').setAttribute('aria-pressed', esCards);
     document.getElementById('btn-taula').setAttribute('aria-pressed', !esCards);
     document.getElementById('missatge-buit').hidden = dadsFiltrades.length > 0 || !esCards;
+  }
+
+  // ─── FLIP TÀCTIL (mòbil/tauleta) ─────────────────────────────────────────────
+
+  function setupFlipTactil() {
+    if (!window.matchMedia('(hover: none)').matches) return;
+    document.addEventListener('click', function (e) {
+      const contenidor = e.target.closest('.card-contenidor');
+      if (!contenidor) {
+        document.querySelectorAll('.card-contenidor.flipped')
+          .forEach(c => c.classList.remove('flipped'));
+        return;
+      }
+      if (e.target.closest('.card-back .btn-pdf')) return;
+      e.preventDefault();
+      const jaFlipped = contenidor.classList.contains('flipped');
+      document.querySelectorAll('.card-contenidor.flipped')
+        .forEach(c => c.classList.remove('flipped'));
+      if (!jaFlipped) contenidor.classList.add('flipped');
+    });
   }
 
   // ─── STATS I COMPTADORS ───────────────────────────────────────────────────────
