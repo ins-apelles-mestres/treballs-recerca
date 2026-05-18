@@ -37,26 +37,12 @@ function logout() {
 
 initLogin();
 
-// ─── MODAL PDF ────────────────────────────────────────────────────────────────
-function obrirPDF(pdfUrl) {
-  const id = (pdfUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || pdfUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/) || [])[1];
-  const src = id
-    ? `https://drive.google.com/file/d/${id}/preview`
-    : `https://docs.google.com/viewer?url=${encodeURIComponent(pdfUrl)}&embedded=true`;
-  document.getElementById('pdf-iframe').src = src;
-  document.getElementById('pdf-modal').hidden = false;
-  document.body.style.overflow = 'hidden';
+// ─── VISOR PDF ────────────────────────────────────────────────────────────────
+function obrirPDF(pdfUrl, titol) {
+  const params = new URLSearchParams({ url: pdfUrl });
+  if (titol) params.set('titol', titol);
+  window.location.href = 'visor.html?' + params.toString();
 }
-
-function tancarPDF() {
-  document.getElementById('pdf-modal').hidden = true;
-  document.getElementById('pdf-iframe').src = '';
-  document.body.style.overflow = '';
-}
-
-document.getElementById('pdf-modal-tancar').addEventListener('click', tancarPDF);
-document.getElementById('pdf-modal-fons').addEventListener('click', tancarPDF);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') tancarPDF(); });
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ─── COMPTADOR DE VISITES ─────────────────────────────────────────────────────
@@ -297,7 +283,7 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
       : `<div class="card-portada card-portada--error" aria-hidden="true"></div>`;
 
     const btnPdf = t.pdf
-      ? `<button class="btn-pdf" data-pdf-url="${escHtml(t.pdf)}">
+      ? `<button class="btn-pdf" data-pdf-url="${escHtml(t.pdf)}" data-pdf-titol="${escHtml(t.titol)}">
            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
            Veure PDF
          </button>`
@@ -389,7 +375,7 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
     document.addEventListener('click', function(e) {
       const btn = e.target.closest('[data-pdf-url]');
       if (!btn) return;
-      obrirPDF(btn.dataset.pdfUrl);
+      obrirPDF(btn.dataset.pdfUrl, btn.dataset.pdfTitol);
     });
   }
 
