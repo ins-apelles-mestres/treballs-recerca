@@ -105,6 +105,21 @@ header h1 {
   color: rgba(0,0,0,.7);
   line-height: 1.6;
   margin: 0;
+  position: relative;
+  padding-left: 2rem;
+}
+
+.header-cita blockquote::before {
+  content: '\201C';
+  position: absolute;
+  left: -.1rem;
+  top: -.6rem;
+  font-size: 4.5rem;
+  line-height: 1;
+  font-family: Georgia, 'Times New Roman', serif;
+  color: rgba(0,0,0,.12);
+  font-style: normal;
+  pointer-events: none;
 }
 
 .header-cita cite {
@@ -391,6 +406,28 @@ select:focus { border-color: var(--color-accent); }
 
 .card-back .btn-pdf:hover { background: rgba(255,255,255,.85); }
 
+.tags-clau {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  padding-top: .5rem;
+}
+
+.tag-clau {
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 20px;
+  padding: .18rem .6rem;
+  font-size: .72rem;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: background .15s;
+  white-space: nowrap;
+}
+
+.tag-clau:hover { background: rgba(255,255,255,.3); }
+
 .card-portada {
   display: block;
   width: 100%;
@@ -416,12 +453,17 @@ select:focus { border-color: var(--color-accent); }
   align-items: center;
   justify-content: center;
   aspect-ratio: 3 / 4;
-  background: #eef0f3;
-  color: var(--color-text-suau);
-  font-size: 2.5rem;
+  background: linear-gradient(135deg, var(--color-accent) 0%, #a02050 100%);
 }
 
-.card-portada--error::after { content: '📄'; }
+.card-portada--error::after {
+  content: attr(data-inicials);
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: rgba(255,255,255,.8);
+  font-family: var(--font);
+  letter-spacing: .05em;
+}
 
 .card-cos {
   padding: 1rem 1.1rem .9rem;

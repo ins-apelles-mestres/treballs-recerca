@@ -136,6 +136,18 @@ initLogin();
   function normalitzaText(s) { return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim(); }
   function normalitzaBolea(s) { return ['sí', 'si', 'yes', 'true', '1', 's'].includes(normalitzaText(s)); }
 
+  function inicialsTitol(titol) {
+    const paraules = titol.split(/\s+/).filter(w => w.replace(/[^a-zA-ZàáèéíïòóúüÀÁÈÉÍÏÒÓÚÜ]/g, '').length > 3);
+    return paraules.slice(0, 2).map(w => w[0].toUpperCase()).join('') || titol[0]?.toUpperCase() || '?';
+  }
+
+  function renderTagsCard(paraulesClau) {
+    if (!paraulesClau) return '';
+    const tags = paraulesClau.split(',').map(k => k.trim()).filter(Boolean);
+    if (!tags.length) return '';
+    return `<div class="tags-clau">${tags.map(t => `<button class="tag-clau" type="button">${escHtml(t)}</button>`).join('')}</div>`;
+  }
+
   // ─── INICIALITZACIÓ ───────────────────────────────────────────────────────────
 
   function init() {
@@ -242,12 +254,13 @@ initLogin();
     const badgePremi = badgeCard(t.premi);
 
     const thumb = thumbnailUrl(t.pdf);
+    const inicials = inicialsTitol(t.titol);
     const portada = thumb
-      ? `<a class="card-portada" href="${escHtml(t.pdf)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+      ? `<a class="card-portada" href="${escHtml(t.pdf)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true" data-inicials="${inicials}">
            <img src="${thumb}" alt="Portada de ${escHtml(t.titol)}" loading="lazy"
                 onerror="this.style.display='none'; this.closest('.card-portada').classList.add('card-portada--error')">
          </a>`
-      : `<div class="card-portada card-portada--error" aria-hidden="true"></div>`;
+      : `<div class="card-portada card-portada--error" aria-hidden="true" data-inicials="${inicials}"></div>`;
 
     const btnPdf = t.pdf
       ? `<a class="btn-pdf" href="${escHtml(t.pdf)}" target="_blank" rel="noopener">
@@ -281,6 +294,7 @@ initLogin();
           <div class="card-back">
             <h3 class="card-back-titol">${escHtml(t.titol)}</h3>
             <p class="card-back-resum">${respostaDors}</p>
+            ${renderTagsCard(t.paraulesClau)}
             <div class="card-back-peu">
               ${btnPdf}
             </div>
@@ -326,6 +340,14 @@ initLogin();
 
     document.querySelectorAll('.taula-treballs th.ordenable').forEach(th => {
       th.addEventListener('click', () => ordenaColumna(th.dataset.col));
+    });
+
+    document.addEventListener('click', function(e) {
+      const tag = e.target.closest('.tag-clau');
+      if (!tag) return;
+      document.getElementById('cerca').value = tag.textContent.trim();
+      aplicarFiltres();
+      document.querySelector('.seccio-principal').scrollIntoView({ behavior: 'smooth' });
     });
   }
 
@@ -424,6 +446,7 @@ initLogin();
         return;
       }
       if (e.target.closest('.card-back .btn-pdf')) return;
+      if (e.target.closest('.tag-clau')) return;
       e.preventDefault();
       const jaFlipped = contenidor.classList.contains('flipped');
       document.querySelectorAll('.card-contenidor.flipped')
