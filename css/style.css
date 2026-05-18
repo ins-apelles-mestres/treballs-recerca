@@ -51,7 +51,13 @@ header {
   padding-bottom: 1.5rem;
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  justify-content: center;
+  position: relative;
+}
+
+header h1 {
+  flex: 1;
+  text-align: center;
 }
 
 .header-logo {
@@ -59,6 +65,8 @@ header {
   width: auto;
   mix-blend-mode: multiply;
   flex-shrink: 0;
+  position: absolute;
+  right: 0;
 }
 
 header h1 {
