@@ -424,9 +424,9 @@ initLogin();
           : `${Math.min(...anys)}–${Math.max(...anys)}`)
       : '—';
 
-    document.getElementById('stat-total').textContent = `${total} treball${total !== 1 ? 's' : ''}`;
-    document.getElementById('stat-premiats').textContent = `${premiats} premiat${premiats !== 1 ? 's' : ''}`;
-    document.getElementById('stat-destacats').textContent = `${destacats} destacat${destacats !== 1 ? 's' : ''}`;
+    document.getElementById('stat-total-num').textContent = total;
+    document.getElementById('stat-premiats-num').textContent = premiats;
+    document.getElementById('stat-destacats-num').textContent = destacats;
     document.getElementById('stat-anys').textContent = rang;
   }
 
