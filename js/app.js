@@ -86,6 +86,7 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
       const text = await resp.text();
       dades = parseCSV(text);
       if (dades.length === 0) throw new Error('El full de càlcul sembla buit o els noms de columna no coincideixen.');
+      dades.sort((a, b) => b.any - a.any);
       init();
     } catch (err) {
       mostrarError(err.message);
@@ -359,8 +360,23 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
       const tag = e.target.closest('.tag-clau');
       if (!tag) return;
       document.getElementById('cerca').value = tag.textContent.trim();
+      document.getElementById('btn-esborra-cerca').hidden = false;
       aplicarFiltres();
       document.querySelector('.seccio-principal').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    const inputCerca = document.getElementById('cerca');
+    const btnEsborra = document.getElementById('btn-esborra-cerca');
+
+    inputCerca.addEventListener('input', function () {
+      btnEsborra.hidden = !this.value;
+    });
+
+    btnEsborra.addEventListener('click', function () {
+      inputCerca.value = '';
+      btnEsborra.hidden = true;
+      aplicarFiltres();
+      inputCerca.focus();
     });
   }
 
