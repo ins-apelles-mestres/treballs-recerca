@@ -116,8 +116,8 @@ main {
 .recents-scroll::-webkit-scrollbar-thumb { background: var(--color-accent); border-radius: 2px; }
 
 .recents-scroll .card {
-  min-width: 260px;
-  max-width: 300px;
+  min-width: 200px;
+  max-width: 240px;
   flex-shrink: 0;
   scroll-snap-align: start;
 }
@@ -225,16 +225,56 @@ select:focus { border-color: var(--color-accent); }
   border: 1px solid var(--color-vora);
   border-radius: var(--radi-card);
   box-shadow: var(--ombra-card);
-  padding: 1.1rem 1.2rem 1rem;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  overflow: hidden;
   transition: box-shadow .2s, transform .2s;
 }
 
 .card:hover {
   box-shadow: var(--ombra-hover);
   transform: translateY(-2px);
+}
+
+.card-portada {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #eef0f3;
+  flex-shrink: 0;
+}
+
+.card-portada img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+  transition: transform .3s;
+}
+
+.card:hover .card-portada img { transform: scale(1.03); }
+
+.card-portada--error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 3 / 4;
+  background: #eef0f3;
+  color: var(--color-text-suau);
+  font-size: 2.5rem;
+}
+
+.card-portada--error::after { content: '📄'; }
+
+.card-cos {
+  padding: 1rem 1.1rem .9rem;
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+  flex: 1;
 }
 
 .card-badge-premi {

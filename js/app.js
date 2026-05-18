@@ -3,7 +3,7 @@
 
   // ─── CONFIGURACIÓ ────────────────────────────────────────────────────────────
   // Enganxa aquí l'URL del teu full de càlcul publicat com a CSV
-  const CSV_URL = 'ENGANXA_AQUÍ_LA_URL_DEL_CSV';
+  const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQtAl6dUB2E0h_79JLFoYRq0CFXbSTi_JID8BgeinxLsSUH1kgzwD8_GaPu4XEsPCpdqggLhckD0BXW/pub?output=csv';
   const N_RECENTS = 5; // quants treballs mostrar a la secció "recents"
 
   // Noms exactes de les columnes al full de càlcul
@@ -111,6 +111,23 @@
     cont.innerHTML = recents.map(t => htmlCard(t)).join('');
   }
 
+  // ─── MINIATURA GOOGLE DRIVE ───────────────────────────────────────────────────
+
+  function extractDriveId(url) {
+    if (!url) return null;
+    let m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (m) return m[1];
+    m = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (m) return m[1];
+    return null;
+  }
+
+  function thumbnailUrl(pdfUrl) {
+    const id = extractDriveId(pdfUrl);
+    if (!id) return null;
+    return `https://drive.google.com/thumbnail?id=${id}&sz=w400`;
+  }
+
   // ─── TARGETES ─────────────────────────────────────────────────────────────────
 
   function renderCards(llista) {
@@ -129,6 +146,14 @@
       ? `<span class="card-badge-premi">★ ${escHtml(t.premi)}</span>`
       : (t.optaPremi ? `<span class="card-badge-opta">Finalista / Optant</span>` : '');
 
+    const thumb = thumbnailUrl(t.pdf);
+    const portada = thumb
+      ? `<a class="card-portada" href="${escHtml(t.pdf)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+           <img src="${thumb}" alt="Portada de ${escHtml(t.titol)}" loading="lazy"
+                onerror="this.closest('.card-portada').classList.add('card-portada--error')">
+         </a>`
+      : `<div class="card-portada card-portada--error" aria-hidden="true"></div>`;
+
     const btnPdf = t.pdf
       ? `<a class="btn-pdf" href="${escHtml(t.pdf)}" target="_blank" rel="noopener">
            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -138,15 +163,18 @@
 
     return `
       <article class="card">
-        ${badgePremi}
-        <h3 class="card-titol">${escHtml(t.titol)}</h3>
-        <div class="card-meta">
-          <span><strong>Autor:</strong> ${escHtml(t.autor)}</span>
-          <span><strong>Tutor:</strong> ${escHtml(t.tutor)}</span>
-        </div>
-        <div class="card-peu">
-          ${t.any ? `<span class="card-any">${t.any}</span>` : '<span></span>'}
-          ${btnPdf}
+        ${portada}
+        <div class="card-cos">
+          ${badgePremi}
+          <h3 class="card-titol">${escHtml(t.titol)}</h3>
+          <div class="card-meta">
+            <span><strong>Autor:</strong> ${escHtml(t.autor)}</span>
+            <span><strong>Tutor:</strong> ${escHtml(t.tutor)}</span>
+          </div>
+          <div class="card-peu">
+            ${t.any ? `<span class="card-any">${t.any}</span>` : '<span></span>'}
+            ${btnPdf}
+          </div>
         </div>
       </article>`;
   }
@@ -320,10 +348,6 @@
 
   // ─── ARRENCADA ────────────────────────────────────────────────────────────────
 
-  if (CSV_URL === 'ENGANXA_AQUÍ_LA_URL_DEL_CSV') {
-    mostrarError('Cal configurar l\'URL del full de càlcul a js/app.js (variable CSV_URL).');
-  } else {
-    fetchData();
-  }
+  fetchData();
 
 })();
