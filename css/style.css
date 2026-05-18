@@ -107,19 +107,30 @@ header h1 {
   margin: 0;
   position: relative;
   padding-left: 2rem;
+  padding-right: 2rem;
 }
 
-.header-cita blockquote::before {
-  content: '\201C';
-  position: absolute;
-  left: -.1rem;
-  top: -.6rem;
+.header-cita blockquote::before,
+.header-cita blockquote::after {
   font-size: 4.5rem;
   line-height: 1;
   font-family: Georgia, 'Times New Roman', serif;
   color: rgba(0,0,0,.12);
   font-style: normal;
   pointer-events: none;
+  position: absolute;
+}
+
+.header-cita blockquote::before {
+  content: '\201C';
+  left: -.1rem;
+  top: -.6rem;
+}
+
+.header-cita blockquote::after {
+  content: '\201D';
+  right: -.1rem;
+  bottom: 1.2rem;
 }
 
 .header-cita cite {
