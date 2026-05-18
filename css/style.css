@@ -269,24 +269,80 @@ select:focus { border-color: var(--color-accent); }
 }
 
 /* =============================================
-   Card
+   Card flip
    ============================================= */
+.card-contenidor {
+  perspective: 1200px;
+}
+
 .card {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform .6s cubic-bezier(.4,0,.2,1);
+}
+
+.card-contenidor:hover .card {
+  transform: rotateY(180deg);
+}
+
+.card-front {
   background: var(--color-card);
   border: 1px solid var(--color-vora);
   border-radius: var(--radi-card);
   box-shadow: var(--ombra-card);
-  padding: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transition: box-shadow .2s, transform .2s;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
-.card:hover {
-  box-shadow: var(--ombra-hover);
-  transform: translateY(-2px);
+.card-back {
+  position: absolute;
+  inset: 0;
+  background: var(--color-accent);
+  border-radius: var(--radi-card);
+  color: #fff;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: rotateY(180deg);
+  overflow: hidden;
 }
+
+.card-back-titol {
+  font-size: .95rem;
+  font-weight: 700;
+  line-height: 1.3;
+  border-bottom: 1px solid rgba(255,255,255,.3);
+  padding-bottom: .6rem;
+}
+
+.card-back-resum {
+  font-size: .85rem;
+  line-height: 1.6;
+  flex: 1;
+  overflow-y: auto;
+  color: rgba(255,255,255,.92);
+}
+
+.card-back-resum::-webkit-scrollbar { width: 4px; }
+.card-back-resum::-webkit-scrollbar-thumb { background: rgba(255,255,255,.4); border-radius: 2px; }
+
+.card-back-peu {
+  padding-top: .6rem;
+  border-top: 1px solid rgba(255,255,255,.3);
+}
+
+.card-back .btn-pdf {
+  background: #fff;
+  color: var(--color-accent);
+}
+
+.card-back .btn-pdf:hover { background: rgba(255,255,255,.85); }
 
 .card-portada {
   display: block;

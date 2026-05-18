@@ -255,22 +255,37 @@ initLogin();
          </a>`
       : `<span class="btn-pdf" aria-disabled="true">Sense PDF</span>`;
 
+    const respostaDors = t.resum
+      ? escHtml(t.resum)
+      : '<em>Sense resum disponible.</em>';
+
     return `
-      <article class="card">
-        ${portada}
-        <div class="card-cos">
-          ${badgePremi}
-          <h3 class="card-titol">${escHtml(t.titol)}</h3>
-          <div class="card-meta">
-            <span><strong>Autor:</strong> ${escHtml(t.autor)}</span>
-            <span><strong>Tutor:</strong> ${escHtml(t.tutor)}</span>
+      <div class="card-contenidor">
+        <article class="card">
+          <div class="card-front">
+            ${portada}
+            <div class="card-cos">
+              ${badgePremi}
+              <h3 class="card-titol">${escHtml(t.titol)}</h3>
+              <div class="card-meta">
+                <span><strong>Autor:</strong> ${escHtml(t.autor)}</span>
+                <span><strong>Tutor:</strong> ${escHtml(t.tutor)}</span>
+              </div>
+              <div class="card-peu">
+                ${t.any ? `<span class="card-any">${t.any}</span>` : '<span></span>'}
+                ${btnPdf}
+              </div>
+            </div>
           </div>
-          <div class="card-peu">
-            ${t.any ? `<span class="card-any">${t.any}</span>` : '<span></span>'}
-            ${btnPdf}
+          <div class="card-back">
+            <h3 class="card-back-titol">${escHtml(t.titol)}</h3>
+            <p class="card-back-resum">${respostaDors}</p>
+            <div class="card-back-peu">
+              ${btnPdf}
+            </div>
           </div>
-        </div>
-      </article>`;
+        </article>
+      </div>`;
   }
 
   // ─── TAULA ────────────────────────────────────────────────────────────────────
