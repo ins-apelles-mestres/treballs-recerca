@@ -40,20 +40,11 @@ a { color: inherit; }
    Header
    ============================================= */
 header {
-  background: linear-gradient(135deg, #d98200 0%, #e89400 40%, #f0a500 70%, #cf7600 100%);
+  background: linear-gradient(to bottom, #c98510 0%, #b37208 100%);
   color: #1a1a1a;
   padding: 2rem 1.5rem 0;
   position: relative;
   overflow: hidden;
-}
-
-header::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 80% 50%, rgba(255,255,255,.12) 0%, transparent 65%),
-              radial-gradient(ellipse at 10% 80%, rgba(0,0,0,.06) 0%, transparent 50%);
-  pointer-events: none;
 }
 
 .header-inner {
@@ -73,12 +64,12 @@ header h1 {
 }
 
 .header-logo {
-  height: 70px;
+  height: 84px;
   width: auto;
   mix-blend-mode: multiply;
   flex-shrink: 0;
   position: absolute;
-  right: 0;
+  right: .75rem;
 }
 
 header h1 {
