@@ -133,6 +133,7 @@ initLogin();
     actualitzarStats();
     actualitzarComptador();
     setupFiltres();
+    setupToggleRecents();
     document.getElementById('timestamp').textContent = new Date().toLocaleString('ca');
   }
 
@@ -140,15 +141,35 @@ initLogin();
 
   function renderRecents() {
     const anyMax = Math.max(...dades.map(t => t.any).filter(Boolean));
-    const recents = dades
-      .filter(t => t.any === anyMax)
-      .slice(0, N_RECENTS);
+    const recents = dades.filter(t => t.any === anyMax).slice(0, N_RECENTS);
+    renderScrollRecents(recents, 'No hi ha treballs recents.');
+  }
+
+  function renderDestacats() {
+    const llista = dades.filter(t => tipusPremi(t.premi) !== 'cap');
+    renderScrollRecents(llista, 'No hi ha treballs destacats ni premiats.');
+  }
+
+  function renderScrollRecents(llista, missatgeBuit) {
     const cont = document.getElementById('recents-scroll');
-    if (recents.length === 0) {
-      cont.innerHTML = '<p class="loading">No hi ha treballs recents.</p>';
+    if (llista.length === 0) {
+      cont.innerHTML = `<p class="loading">${missatgeBuit}</p>`;
       return;
     }
-    cont.innerHTML = recents.map(t => htmlCard(t)).join('');
+    cont.innerHTML = llista.map(t => htmlCard(t)).join('');
+  }
+
+  function setupToggleRecents() {
+    document.getElementById('btn-recents').addEventListener('click', () => {
+      document.getElementById('btn-recents').classList.add('actiu');
+      document.getElementById('btn-destacats-sec').classList.remove('actiu');
+      renderRecents();
+    });
+    document.getElementById('btn-destacats-sec').addEventListener('click', () => {
+      document.getElementById('btn-destacats-sec').classList.add('actiu');
+      document.getElementById('btn-recents').classList.remove('actiu');
+      renderDestacats();
+    });
   }
 
   // ─── MINIATURA GOOGLE DRIVE ───────────────────────────────────────────────────
