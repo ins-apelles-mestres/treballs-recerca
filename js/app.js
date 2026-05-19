@@ -610,15 +610,13 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
     const PAD = { top: 20, right: 20, bottom: 44, left: 36 };
     const areaW = W - PAD.left - PAD.right;
     const areaH = H - PAD.top - PAD.bottom;
-    const maxVal = Math.max(...anys.map(a => Math.max(perAny[a].premiats, perAny[a].destacats)), 1);
+    const maxVal = Math.max(...anys.map(a => perAny[a].premiats + perAny[a].destacats), 1);
     const slotW = areaW / anys.length;
-    const gap = 2;
-    const barW = Math.max(4, Math.min(22, (slotW * 0.7 - gap) / 2));
+    const barW = Math.max(6, Math.min(40, slotW * 0.65));
     const colorGrid = fosc ? '#2e3347' : '#dde3ec';
     const colorText = fosc ? '#8090a8' : '#5a6a7e';
 
-    const xPremiats  = i => PAD.left + (i + 0.5) * slotW - barW - gap / 2;
-    const xDestacats = i => PAD.left + (i + 0.5) * slotW + gap / 2;
+    const xOf = i => PAD.left + (i + 0.5) * slotW - barW / 2;
     const yOf = v => PAD.top + areaH - Math.round((v / maxVal) * areaH);
     const hOf = v => Math.max(v > 0 ? 2 : 0, Math.round((v / maxVal) * areaH));
 
@@ -633,10 +631,9 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
 
     anys.forEach((any, i) => {
       const d = perAny[any];
-      const xp = xPremiats(i);
-      const xd = xDestacats(i);
-      if (d.premiats > 0)  s += `<rect x="${xp}" y="${yOf(d.premiats)}"  width="${barW}" height="${hOf(d.premiats)}"  fill="#7a1a3a" rx="2"/>`;
-      if (d.destacats > 0) s += `<rect x="${xd}" y="${yOf(d.destacats)}" width="${barW}" height="${hOf(d.destacats)}" fill="#6a0dad" rx="2"/>`;
+      const total = d.premiats + d.destacats;
+      const xi = xOf(i);
+      if (total > 0) s += `<rect x="${xi}" y="${yOf(total)}" width="${barW}" height="${hOf(total)}" fill="#7a1a3a" rx="2"/>`;
       const lx = PAD.left + (i + 0.5) * slotW;
       const ly = H - PAD.bottom + 14;
       if (anys.length > 10) {
