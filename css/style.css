@@ -933,3 +933,220 @@ footer {
   .card-contenidor:hover .card { transform: none; }
   .card-contenidor.flipped .card { transform: rotateY(180deg); }
 }
+
+/* =============================================
+   Mode fosc — variables
+   ============================================= */
+html[data-tema="fosc"] {
+  --color-fons:      #0f1117;
+  --color-card:      #1e2130;
+  --color-text:      #e8eaf0;
+  --color-text-suau: #8090a8;
+  --color-vora:      #2e3347;
+  --color-error-bg:  #2a1515;
+  --ombra-card:      0 2px 8px rgba(0,0,0,.4);
+  --ombra-hover:     0 6px 20px rgba(0,0,0,.6);
+}
+
+html[data-tema="fosc"] header {
+  background: linear-gradient(to bottom, #7a4a00, #5a3400);
+}
+
+html[data-tema="fosc"] .header-cita blockquote,
+html[data-tema="fosc"] .header-cita cite { color: rgba(255,255,255,.6); }
+html[data-tema="fosc"] .header-cita blockquote::before,
+html[data-tema="fosc"] .cometa-tanca { color: rgba(255,255,255,.15); }
+html[data-tema="fosc"] header h1 { color: #f0c060; }
+
+html[data-tema="fosc"] .stat-bloc { background: rgba(255,255,255,.1); }
+html[data-tema="fosc"] .stat-num  { color: #e8eaf0; }
+html[data-tema="fosc"] .stat-label { color: rgba(255,255,255,.55); }
+
+html[data-tema="fosc"] .controls {
+  background: #1a1e2e;
+  border-color: var(--color-vora);
+}
+
+html[data-tema="fosc"] #cerca,
+html[data-tema="fosc"] select {
+  background: #252a3a;
+  color: var(--color-text);
+  border-color: var(--color-vora);
+  color-scheme: dark;
+}
+
+html[data-tema="fosc"] .btn-recents:not(.actiu),
+html[data-tema="fosc"] .btn-vista:not(.actiu) {
+  background: #252a3a;
+  color: var(--color-text-suau);
+}
+
+html[data-tema="fosc"] .btn-recents:not(.actiu):hover,
+html[data-tema="fosc"] .btn-vista:not(.actiu):hover { background: #2e3347; }
+
+html[data-tema="fosc"] .taula-treballs tbody tr:nth-child(even) { background: #252a3a; }
+html[data-tema="fosc"] .taula-treballs tbody tr:hover { background: #2e3347; }
+
+html[data-tema="fosc"] .card-any { background: #252a3a; color: #f0c060; }
+
+html[data-tema="fosc"] .login-caixa { background: #1e2130; border-color: var(--color-vora); }
+
+/* ─── Botó tema ─────────────────────────────────────────────────────────────── */
+.btn-tema {
+  position: absolute;
+  left: .75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,.15);
+  border: none;
+  color: #1a1a1a;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .15s;
+  z-index: 1;
+}
+
+html[data-tema="fosc"] .btn-tema { color: #e8eaf0; background: rgba(255,255,255,.15); }
+.btn-tema:hover { background: rgba(0,0,0,.25); }
+html[data-tema="fosc"] .btn-tema:hover { background: rgba(255,255,255,.25); }
+
+/* ─── Botó gràfic ───────────────────────────────────────────────────────────── */
+.btn-grafic {
+  background: rgba(0,0,0,.12);
+  border: none;
+  color: #1a1a1a;
+  border-radius: 6px;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .15s;
+  flex-shrink: 0;
+}
+
+html[data-tema="fosc"] .btn-grafic { color: #e8eaf0; background: rgba(255,255,255,.12); }
+.btn-grafic:hover { background: rgba(0,0,0,.22); }
+html[data-tema="fosc"] .btn-grafic:hover { background: rgba(255,255,255,.22); }
+
+/* ─── Controls recents (toggle + sorpresa) ──────────────────────────────────── */
+.recents-controls {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
+
+/* ─── Botó sorpresa ─────────────────────────────────────────────────────────── */
+.btn-sorpresa {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .5rem 1rem;
+  background: var(--color-primari);
+  color: #1a1a1a;
+  border: none;
+  border-radius: 6px;
+  font-size: .88rem;
+  font-family: var(--font);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.btn-sorpresa:hover { background: var(--color-primari-c); }
+
+/* ─── Modal gràfic ──────────────────────────────────────────────────────────── */
+#grafic-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.grafic-fons {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  cursor: pointer;
+}
+
+.grafic-finestra {
+  position: relative;
+  background: var(--color-card);
+  border-radius: var(--radi-card);
+  box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  width: 100%;
+  max-width: 700px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.grafic-cap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.grafic-titol {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.grafic-tancar {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--color-text-suau);
+  padding: .2rem .5rem;
+  border-radius: 4px;
+  transition: background .15s;
+  line-height: 1;
+}
+
+.grafic-tancar:hover { background: var(--color-vora); }
+
+.grafic-cos { width: 100%; overflow-x: auto; }
+
+.grafic-svg { width: 100%; height: auto; display: block; }
+
+.grafic-llegenda {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.llegenda-item {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .82rem;
+  color: var(--color-text-suau);
+}
+
+.llegenda-total .llegenda-color {
+  background: var(--color-primari);
+  width: 12px; height: 12px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.llegenda-premiats .llegenda-color {
+  background: var(--color-accent);
+  width: 12px; height: 12px;
+  border-radius: 2px;
+  display: inline-block;
+}

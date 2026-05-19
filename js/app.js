@@ -78,6 +78,7 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
     resum:       'Resum',
     paraulesClau:'Paraules Clau',
     imatgePortada:'Imatge portada',
+    ambit:       'Àmbit',
   };
   // ─────────────────────────────────────────────────────────────────────────────
 
@@ -125,6 +126,7 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
       resum:        cel(cels, idx.resum),
       paraulesClau: cel(cels, idx.paraulesClau),
       imatgePortada:cel(cels, idx.imatgePortada),
+      ambit:        cel(cels, idx.ambit),
     })).filter(t => t.titol);
   }
 
@@ -175,6 +177,7 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
 
   function init() {
     omplirFiltreAny();
+    omplirFiltreAmbit();
     dadsFiltrades = [...dades];
     renderDestacats();
     renderCards(dadsFiltrades);
@@ -184,6 +187,7 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
     setupFiltres();
     setupToggleRecents();
     setupFlipTactil();
+    setupTema();
     document.getElementById('timestamp').textContent = new Date().toLocaleString('ca');
   }
 
@@ -306,6 +310,7 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
               <div class="card-meta">
                 <span><strong>Autor:</strong> ${escHtml(t.autor)}</span>
                 <span><strong>Tutor:</strong> ${escHtml(t.tutor)}</span>
+                ${t.ambit ? `<span><strong>Àmbit:</strong> ${escHtml(t.ambit)}</span>` : ''}
               </div>
               <div class="card-peu">
                 ${t.any ? `<span class="card-any">${t.any}</span>` : '<span></span>'}
@@ -346,6 +351,7 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
         <td>${escHtml(t.titol)}</td>
         <td>${escHtml(t.autor)}</td>
         <td>${escHtml(t.tutor)}</td>
+        <td>${escHtml(t.ambit) || '—'}</td>
         <td>${t.any || '—'}</td>
         <td>${celPremi}</td>
         <td>${celPdf}</td>
@@ -359,8 +365,13 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
     document.getElementById('cerca').addEventListener('input', aplicarFiltres);
     document.getElementById('filtre-any').addEventListener('change', aplicarFiltres);
     document.getElementById('filtre-premi').addEventListener('change', aplicarFiltres);
+    document.getElementById('filtre-ambit').addEventListener('change', aplicarFiltres);
     document.getElementById('btn-cards').addEventListener('click', () => canviarVista('cards'));
     document.getElementById('btn-taula').addEventListener('click', () => canviarVista('taula'));
+    document.getElementById('btn-sorpresa').addEventListener('click', sorpresa);
+    document.getElementById('btn-grafic').addEventListener('click', obrirGrafic);
+    document.getElementById('grafic-tancar').addEventListener('click', tancarGrafic);
+    document.querySelector('.grafic-fons').addEventListener('click', tancarGrafic);
 
     document.querySelectorAll('.taula-treballs th.ordenable').forEach(th => {
       th.addEventListener('click', () => ordenaColumna(th.dataset.col));
@@ -385,6 +396,7 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
     const q = normalitzaText(document.getElementById('cerca').value);
     const any = document.getElementById('filtre-any').value;
     const premi = document.getElementById('filtre-premi').value;
+    const ambit = document.getElementById('filtre-ambit').value;
 
     dadsFiltrades = dades.filter(t => {
       if (q && !normalitzaText(t.titol).includes(q) &&
@@ -395,6 +407,7 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
       if (any && t.any !== parseInt(any, 10)) return false;
       if (premi === 'guanyadors' && tipusPremi(t.premi) !== 'premi') return false;
       if (premi === 'destacats' && tipusPremi(t.premi) !== 'destacat') return false;
+      if (ambit && t.ambit !== ambit) return false;
       return true;
     });
 
@@ -524,6 +537,119 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  }
+
+  // ─── ÀMBIT ───────────────────────────────────────────────────────────────────
+
+  function omplirFiltreAmbit() {
+    const ambits = [...new Set(dades.map(t => t.ambit).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'ca'));
+    const sel = document.getElementById('filtre-ambit');
+    ambits.forEach(a => {
+      const opt = document.createElement('option');
+      opt.value = a;
+      opt.textContent = a;
+      sel.appendChild(opt);
+    });
+    if (!ambits.length) sel.hidden = true;
+  }
+
+  // ─── MODE FOSC ────────────────────────────────────────────────────────────────
+
+  function setupTema() {
+    function actualitzarIcona() {
+      const fosc = document.documentElement.dataset.tema === 'fosc';
+      const btn = document.getElementById('btn-tema');
+      btn.title = fosc ? 'Activar mode clar' : 'Activar mode fosc';
+      btn.setAttribute('aria-label', fosc ? 'Activar mode clar' : 'Activar mode fosc');
+      btn.innerHTML = fosc
+        ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'
+        : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    }
+    actualitzarIcona();
+    document.getElementById('btn-tema').addEventListener('click', () => {
+      const nou = document.documentElement.dataset.tema === 'fosc' ? 'clar' : 'fosc';
+      document.documentElement.dataset.tema = nou;
+      localStorage.setItem('tema', nou);
+      actualitzarIcona();
+    });
+  }
+
+  // ─── SORPRESA ─────────────────────────────────────────────────────────────────
+
+  function sorpresa() {
+    const candidats = dades.filter(t => tipusPremi(t.premi) !== 'cap' && t.pdf);
+    if (!candidats.length) return;
+    const t = candidats[Math.floor(Math.random() * candidats.length)];
+    obrirPDF(t.pdf, t.titol, t.autor, t.tutor);
+  }
+
+  // ─── GRÀFIC ───────────────────────────────────────────────────────────────────
+
+  function obrirGrafic() {
+    const perAny = {};
+    dades.forEach(t => {
+      if (!t.any) return;
+      if (!perAny[t.any]) perAny[t.any] = { total: 0, premiats: 0 };
+      perAny[t.any].total++;
+      if (tipusPremi(t.premi) !== 'cap') perAny[t.any].premiats++;
+    });
+    const anys = Object.keys(perAny).map(Number).sort((a, b) => a - b);
+    document.getElementById('grafic-cos').innerHTML = renderGraficSVG(perAny, anys);
+    document.getElementById('grafic-modal').hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+
+  function tancarGrafic() {
+    document.getElementById('grafic-modal').hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  function renderGraficSVG(perAny, anys) {
+    if (!anys.length) return '<p style="text-align:center;padding:2rem;color:var(--color-text-suau)">Sense dades.</p>';
+    const fosc = document.documentElement.dataset.tema === 'fosc';
+    const W = 640, H = 280;
+    const PAD = { top: 20, right: 20, bottom: 44, left: 36 };
+    const areaW = W - PAD.left - PAD.right;
+    const areaH = H - PAD.top - PAD.bottom;
+    const maxVal = Math.max(...anys.map(a => perAny[a].total), 1);
+    const slotW = areaW / anys.length;
+    const barW = Math.max(6, Math.min(40, slotW * 0.65));
+    const colorGrid = fosc ? '#2e3347' : '#dde3ec';
+    const colorText = fosc ? '#8090a8' : '#5a6a7e';
+
+    const xOf = i => PAD.left + (i + 0.5) * slotW - barW / 2;
+    const yOf = v => PAD.top + areaH - Math.round((v / maxVal) * areaH);
+    const hOf = v => Math.max(2, Math.round((v / maxVal) * areaH));
+
+    let s = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" class="grafic-svg">`;
+
+    for (let i = 1; i <= 4; i++) {
+      const val = Math.round((maxVal * i) / 4);
+      const yp = PAD.top + areaH - Math.round((val / maxVal) * areaH);
+      s += `<line x1="${PAD.left}" y1="${yp}" x2="${W - PAD.right}" y2="${yp}" stroke="${colorGrid}" stroke-width="1"/>`;
+      s += `<text x="${PAD.left - 4}" y="${yp + 4}" text-anchor="end" font-size="10" fill="${colorText}" font-family="system-ui">${val}</text>`;
+    }
+
+    anys.forEach((any, i) => {
+      const d = perAny[any];
+      const xi = xOf(i);
+      s += `<rect x="${xi}" y="${yOf(d.total)}" width="${barW}" height="${hOf(d.total)}" fill="#e08c00" rx="2"/>`;
+      if (d.premiats > 0) {
+        s += `<rect x="${xi}" y="${yOf(d.premiats)}" width="${barW}" height="${hOf(d.premiats)}" fill="#7a1a3a" rx="2"/>`;
+      }
+      const lx = xi + barW / 2;
+      const ly = H - PAD.bottom + 14;
+      if (anys.length > 10) {
+        s += `<text transform="rotate(-45,${lx},${ly + 6})" x="${lx}" y="${ly + 6}" text-anchor="end" font-size="9" fill="${colorText}" font-family="system-ui">${any}</text>`;
+      } else {
+        s += `<text x="${lx}" y="${ly}" text-anchor="middle" font-size="10" fill="${colorText}" font-family="system-ui">${any}</text>`;
+      }
+    });
+
+    s += `<line x1="${PAD.left}" y1="${PAD.top}" x2="${PAD.left}" y2="${PAD.top + areaH}" stroke="${colorGrid}"/>`;
+    s += `<line x1="${PAD.left}" y1="${PAD.top + areaH}" x2="${W - PAD.right}" y2="${PAD.top + areaH}" stroke="${colorGrid}"/>`;
+    s += '</svg>';
+    return s;
   }
 
   // ─── ARRENCADA ────────────────────────────────────────────────────────────────
