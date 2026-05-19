@@ -96,6 +96,37 @@
 
     /* Impedeix impressió */
     @media print { body { display: none !important; } }
+
+    .avis-mobil {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      gap: 1.25rem;
+      padding: 2rem;
+      text-align: center;
+      color: #5a6a7e;
+    }
+
+    .avis-mobil svg {
+      color: #7a1a3a;
+      opacity: .7;
+    }
+
+    .avis-mobil strong {
+      display: block;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: .25rem;
+    }
+
+    .avis-mobil p {
+      font-size: .92rem;
+      line-height: 1.6;
+      max-width: 280px;
+    }
   </style>
 </head>
 <body>
@@ -107,10 +138,19 @@
     </div>
     <img src="img/logo.png" alt="INS Apel·les Mestres" class="visor-logo">
   </div>
-  <div class="visor-contenidor">
+  <div class="visor-contenidor" id="visor-contenidor">
     <iframe id="visor-iframe" class="visor-iframe"
       sandbox="allow-scripts allow-same-origin allow-forms"
       allowfullscreen></iframe>
+  </div>
+  <div class="avis-mobil" id="avis-mobil">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="5" y="2" width="14" height="20" rx="2"/>
+      <line x1="12" y1="18" x2="12" y2="18.5" stroke-linecap="round" stroke-width="2"/>
+    </svg>
+    <p><strong>Dispositiu no compatible</strong>
+      Els treballs de recerca només es poden visualitzar des d'un ordinador.
+    </p>
   </div>
 
   <script>
@@ -128,7 +168,10 @@
     const parts = [autor && 'Autor/a: ' + autor, tutor && 'Tutor/a: ' + tutor].filter(Boolean);
     if (parts.length) document.getElementById('visor-meta').textContent = parts.join('  ·  ');
 
-    if (pdfUrl) {
+    if (window.innerWidth < 768) {
+      document.getElementById('visor-contenidor').style.display = 'none';
+      document.getElementById('avis-mobil').style.display = 'flex';
+    } else if (pdfUrl) {
       const m   = pdfUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || pdfUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
       const src = m
         ? 'https://drive.google.com/file/d/' + m[1] + '/preview'
