@@ -937,6 +937,7 @@ footer {
     font-size: 1.2rem;
     padding-left: 48px;
     padding-right: 48px;
+    margin-top: .5rem;
   }
   .header-inferior {
     flex-direction: column;
@@ -953,7 +954,7 @@ footer {
   .cometa-tanca { font-size: 2.5rem; vertical-align: -.9rem; }
   .header-cita cite {
     display: inline;
-    font-size: .68rem;
+    font-size: .6rem;
     margin-top: 0;
   }
   .stats-bar { flex-wrap: wrap; }
