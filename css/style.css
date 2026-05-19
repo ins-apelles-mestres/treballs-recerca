@@ -923,20 +923,16 @@ footer {
   header { padding: .5rem 1rem 0; }
   .header-inner {
     padding: .75rem 0 .9rem;
-    gap: .5rem;
-    align-items: center;
   }
   .header-logo {
     height: 40px;
-    position: static;
-    right: auto;
-    flex-shrink: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
   }
   header h1 {
     font-size: 1.2rem;
-    padding-right: 0;
-    flex: initial;
-    text-align: left;
+    padding-right: 48px;
   }
   .header-inferior {
     flex-direction: column;
