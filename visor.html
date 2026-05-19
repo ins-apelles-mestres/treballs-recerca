@@ -135,6 +135,26 @@
         : 'https://docs.google.com/viewer?url=' + encodeURIComponent(pdfUrl) + '&embedded=true';
       document.getElementById('visor-iframe').src = src;
     }
+
+    (function () {
+      const usuari = sessionStorage.getItem('usuari') || '?';
+      const ara = new Date();
+      const data = ara.toLocaleDateString('ca-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const hora = ara.toLocaleTimeString('ca-ES', { hour: '2-digit', minute: '2-digit' });
+      const text = usuari + ' · ' + data + ' ' + hora;
+      const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="340" height="190">'
+        + '<text x="170" y="95" text-anchor="middle" dominant-baseline="middle"'
+        + ' transform="rotate(-35 170 95)"'
+        + ' font-family="system-ui,-apple-system,sans-serif" font-size="13"'
+        + ' fill="rgba(0,0,0,0.07)" font-weight="600">' + text + '</text></svg>';
+      const div = document.createElement('div');
+      div.setAttribute('aria-hidden', 'true');
+      div.style.cssText = 'position:fixed;inset:0;z-index:9999;pointer-events:none;'
+        + 'user-select:none;-webkit-user-select:none;'
+        + 'background-image:url("data:image/svg+xml,' + encodeURIComponent(svg) + '");'
+        + 'background-repeat:repeat;';
+      document.body.appendChild(div);
+    })();
   </script>
 </body>
 </html>
