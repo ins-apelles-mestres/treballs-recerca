@@ -951,6 +951,11 @@ footer {
   }
   .header-cita blockquote::before { font-size: 2.5rem; top: -.1rem; }
   .cometa-tanca { font-size: 2.5rem; vertical-align: -.9rem; }
+  .header-cita cite {
+    display: inline;
+    font-size: .68rem;
+    margin-top: 0;
+  }
   .stats-bar { flex-wrap: wrap; }
 }
 
