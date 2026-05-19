@@ -310,7 +310,6 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
               <div class="card-meta">
                 <span><strong>Autor:</strong> ${escHtml(t.autor)}</span>
                 <span><strong>Tutor:</strong> ${escHtml(t.tutor)}</span>
-                ${t.ambit ? `<span><strong>Àmbit:</strong> ${escHtml(t.ambit)}</span>` : ''}
               </div>
               <div class="card-peu">
                 ${t.any ? `<span class="card-any">${t.any}</span>` : '<span></span>'}
