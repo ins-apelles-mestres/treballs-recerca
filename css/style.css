@@ -1150,3 +1150,10 @@ html[data-tema="fosc"] .btn-grafic:hover { background: rgba(255,255,255,.22); }
   border-radius: 2px;
   display: inline-block;
 }
+
+.llegenda-destacats .llegenda-color {
+  background: #6a0dad;
+  width: 12px; height: 12px;
+  border-radius: 2px;
+  display: inline-block;
+}

@@ -588,9 +588,9 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
     const perAny = {};
     dades.forEach(t => {
       if (!t.any) return;
-      if (!perAny[t.any]) perAny[t.any] = { total: 0, premiats: 0 };
-      perAny[t.any].total++;
-      if (tipusPremi(t.premi) !== 'cap') perAny[t.any].premiats++;
+      if (!perAny[t.any]) perAny[t.any] = { premiats: 0, destacats: 0 };
+      if (tipusPremi(t.premi) === 'premi')    perAny[t.any].premiats++;
+      if (tipusPremi(t.premi) === 'destacat') perAny[t.any].destacats++;
     });
     const anys = Object.keys(perAny).map(Number).sort((a, b) => a - b);
     document.getElementById('grafic-cos').innerHTML = renderGraficSVG(perAny, anys);
@@ -610,15 +610,17 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
     const PAD = { top: 20, right: 20, bottom: 44, left: 36 };
     const areaW = W - PAD.left - PAD.right;
     const areaH = H - PAD.top - PAD.bottom;
-    const maxVal = Math.max(...anys.map(a => perAny[a].total), 1);
+    const maxVal = Math.max(...anys.map(a => Math.max(perAny[a].premiats, perAny[a].destacats)), 1);
     const slotW = areaW / anys.length;
-    const barW = Math.max(6, Math.min(40, slotW * 0.65));
+    const gap = 2;
+    const barW = Math.max(4, Math.min(22, (slotW * 0.7 - gap) / 2));
     const colorGrid = fosc ? '#2e3347' : '#dde3ec';
     const colorText = fosc ? '#8090a8' : '#5a6a7e';
 
-    const xOf = i => PAD.left + (i + 0.5) * slotW - barW / 2;
+    const xPremiats  = i => PAD.left + (i + 0.5) * slotW - barW - gap / 2;
+    const xDestacats = i => PAD.left + (i + 0.5) * slotW + gap / 2;
     const yOf = v => PAD.top + areaH - Math.round((v / maxVal) * areaH);
-    const hOf = v => Math.max(2, Math.round((v / maxVal) * areaH));
+    const hOf = v => Math.max(v > 0 ? 2 : 0, Math.round((v / maxVal) * areaH));
 
     let s = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" class="grafic-svg">`;
 
@@ -631,12 +633,11 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
 
     anys.forEach((any, i) => {
       const d = perAny[any];
-      const xi = xOf(i);
-      s += `<rect x="${xi}" y="${yOf(d.total)}" width="${barW}" height="${hOf(d.total)}" fill="#e08c00" rx="2"/>`;
-      if (d.premiats > 0) {
-        s += `<rect x="${xi}" y="${yOf(d.premiats)}" width="${barW}" height="${hOf(d.premiats)}" fill="#7a1a3a" rx="2"/>`;
-      }
-      const lx = xi + barW / 2;
+      const xp = xPremiats(i);
+      const xd = xDestacats(i);
+      if (d.premiats > 0)  s += `<rect x="${xp}" y="${yOf(d.premiats)}"  width="${barW}" height="${hOf(d.premiats)}"  fill="#7a1a3a" rx="2"/>`;
+      if (d.destacats > 0) s += `<rect x="${xd}" y="${yOf(d.destacats)}" width="${barW}" height="${hOf(d.destacats)}" fill="#6a0dad" rx="2"/>`;
+      const lx = PAD.left + (i + 0.5) * slotW;
       const ly = H - PAD.bottom + 14;
       if (anys.length > 10) {
         s += `<text transform="rotate(-45,${lx},${ly + 6})" x="${lx}" y="${ly + 6}" text-anchor="end" font-size="9" fill="${colorText}" font-family="system-ui">${any}</text>`;
