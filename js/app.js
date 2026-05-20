@@ -1,41 +1,42 @@
-// ─── LOGIN ───────────────────────────────────────────────────────────────────
-const USUARIS = [
-  { usuari: 'rsero1', contrasenya: 'rsero1' },
-];
+// ─── LOGIN (Firebase Auth) ────────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyC1XGWamPI4eTedacK84uMJ-8hHgGDCZps",
+  authDomain: "treballs-recerca.firebaseapp.com",
+  projectId: "treballs-recerca",
+  storageBucket: "treballs-recerca.firebasestorage.app",
+  messagingSenderId: "624915028496",
+  appId: "1:624915028496:web:3fda3add683616e0060895"
+};
 
-function initLogin() {
-  if (sessionStorage.getItem('autenticat') === 'true') {
-    mostrarContingut();
-    return;
+firebase.initializeApp(firebaseConfig);
+
+const DOMINI_PERMET = '@apellesmestres.cat';
+
+firebase.auth().onAuthStateChanged(function (user) {
+  if (user && user.email.endsWith(DOMINI_PERMET)) {
+    document.getElementById('login-overlay').hidden = true;
+    document.getElementById('contingut-principal').hidden = false;
+  } else {
+    if (user) firebase.auth().signOut();
+    document.getElementById('login-overlay').hidden = false;
+    document.getElementById('contingut-principal').hidden = true;
+    if (user) document.getElementById('login-error').hidden = false;
   }
-  document.getElementById('login-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const u = document.getElementById('login-usuari').value.trim();
-    const c = document.getElementById('login-contrasenya').value;
-    const valid = USUARIS.some(x => x.usuari === u && x.contrasenya === c);
-    if (valid) {
-      sessionStorage.setItem('autenticat', 'true');
-      mostrarContingut();
-    } else {
-      document.getElementById('login-error').hidden = false;
-    }
-  });
-}
+});
 
-function mostrarContingut() {
-  document.getElementById('login-overlay').hidden = true;
-  document.getElementById('contingut-principal').hidden = false;
-}
+document.getElementById('btn-google-login').addEventListener('click', function () {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({ hd: 'apellesmestres.cat' });
+  document.getElementById('login-error').hidden = true;
+  firebase.auth().signInWithPopup(provider).catch(function () {
+    document.getElementById('login-error').hidden = false;
+  });
+});
 
 function logout() {
-  sessionStorage.removeItem('autenticat');
-  document.getElementById('contingut-principal').hidden = true;
-  document.getElementById('login-overlay').hidden = false;
-  document.getElementById('login-usuari').value = '';
-  document.getElementById('login-contrasenya').value = '';
+  firebase.auth().signOut();
 }
-
-initLogin();
+// ─────────────────────────────────────────────────────────────────────────────
 
 // ─── VISOR PDF ────────────────────────────────────────────────────────────────
 function obrirPDF(pdfUrl, titol, autor, tutor) {
