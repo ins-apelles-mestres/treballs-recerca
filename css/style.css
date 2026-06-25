@@ -217,8 +217,8 @@ html[data-tema="fosc"] .btn-nav-seccio:hover { background: var(--color-accent-c)
   align-items: center;
   gap: .35rem;
   padding: .4rem .85rem;
-  background: rgba(0,0,0,.15);
-  color: #1a1a1a;
+  background: var(--color-primari);
+  color: #fff;
   border-radius: 6px;
   font-size: .85rem;
   font-weight: 700;
@@ -227,10 +227,10 @@ html[data-tema="fosc"] .btn-nav-seccio:hover { background: var(--color-accent-c)
   white-space: nowrap;
 }
 
-.btn-nav-back:hover { background: rgba(0,0,0,.25); }
+.btn-nav-back:hover { background: #cc8400; }
 
-html[data-tema="fosc"] .btn-nav-back { background: rgba(255,255,255,.15); color: #e8eaf0; }
-html[data-tema="fosc"] .btn-nav-back:hover { background: rgba(255,255,255,.25); }
+html[data-tema="fosc"] .btn-nav-back { background: var(--color-primari); color: #fff; }
+html[data-tema="fosc"] .btn-nav-back:hover { background: #cc8400; }
 
 /* ─── Botó gràfic ───────────────────────────────────────────────────────────── */
 .btn-grafic {
