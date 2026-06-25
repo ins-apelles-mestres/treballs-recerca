@@ -57,10 +57,24 @@ header {
   position: relative;
 }
 
+/* Grup esquerra: lluna + Notícies */
+.header-controls-esq {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
 header h1 {
   flex: 1;
   text-align: center;
   color: var(--color-accent);
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -.5px;
 }
 
 .header-logo {
@@ -70,12 +84,6 @@ header h1 {
   flex-shrink: 0;
   position: absolute;
   right: .75rem;
-}
-
-header h1 {
-  font-size: clamp(1.6rem, 4vw, 2.4rem);
-  font-weight: 700;
-  letter-spacing: -.5px;
 }
 
 .header-subtitol {
@@ -170,16 +178,16 @@ header h1 {
   color: rgba(0,0,0,.6);
 }
 
-/* ─── Botó Notícies (dins stats-bar) ───────────────────────────────────────── */
+/* ─── Botó Notícies ─────────────────────────────────────────────────────────── */
 .btn-nav-seccio {
   display: inline-flex;
   align-items: center;
   gap: .35rem;
-  padding: .28rem .75rem;
+  padding: .4rem .85rem;
   background: var(--color-accent);
   color: #fff;
   border-radius: 6px;
-  font-size: .82rem;
+  font-size: .85rem;
   font-weight: 700;
   text-decoration: none;
   transition: background .15s;
@@ -188,19 +196,19 @@ header h1 {
 
 .btn-nav-seccio:hover { background: var(--color-accent-c); }
 
-html[data-tema="fosc"] .btn-nav-seccio { background: #9a2a5a; }
-html[data-tema="fosc"] .btn-nav-seccio:hover { background: var(--color-accent); }
+html[data-tema="fosc"] .btn-nav-seccio { background: var(--color-accent); }
+html[data-tema="fosc"] .btn-nav-seccio:hover { background: var(--color-accent-c); }
 
 /* ─── Botó tornar (pàgina notícies) ────────────────────────────────────────── */
 .btn-nav-back {
   display: inline-flex;
   align-items: center;
   gap: .35rem;
-  padding: .28rem .75rem;
+  padding: .4rem .85rem;
   background: rgba(0,0,0,.15);
   color: #1a1a1a;
   border-radius: 6px;
-  font-size: .82rem;
+  font-size: .85rem;
   font-weight: 700;
   text-decoration: none;
   transition: background .15s;
@@ -211,6 +219,26 @@ html[data-tema="fosc"] .btn-nav-seccio:hover { background: var(--color-accent); 
 
 html[data-tema="fosc"] .btn-nav-back { background: rgba(255,255,255,.15); color: #e8eaf0; }
 html[data-tema="fosc"] .btn-nav-back:hover { background: rgba(255,255,255,.25); }
+
+/* ─── Botó tema (lluna) ─────────────────────────────────────────────────────── */
+.btn-tema {
+  background: rgba(0,0,0,.15);
+  border: none;
+  color: #1a1a1a;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .15s;
+  flex-shrink: 0;
+}
+
+html[data-tema="fosc"] .btn-tema { color: #e8eaf0; background: rgba(255,255,255,.15); }
+.btn-tema:hover { background: rgba(0,0,0,.25); }
+html[data-tema="fosc"] .btn-tema:hover { background: rgba(255,255,255,.25); }
 
 /* =============================================
    Main
@@ -979,14 +1007,15 @@ footer {
   .grid-cards { grid-template-columns: 1fr; }
   header { padding: .5rem 1rem 1rem; }
   .header-inner { padding: .75rem 0 .9rem; }
-  .header-logo { height: 40px; top: 50%; transform: translateY(-50%); right: 0; }
-  header h1 { font-size: 1.2rem; padding-left: 48px; padding-right: 48px; margin-top: .9rem; }
+  .header-logo { height: 40px; right: 0; }
+  header h1 { font-size: 1.2rem; }
   .header-inferior { flex-direction: column; gap: .6rem; border-top: none; padding: .6rem 0 0; }
   .header-cita blockquote { font-size: .75rem; padding-left: .8rem; padding-right: .5rem; }
   .header-cita blockquote::before { font-size: 2.5rem; top: -.1rem; }
   .cometa-tanca { font-size: 2.5rem; vertical-align: -.9rem; }
   .header-cita cite { display: inline; font-size: .6rem; margin-top: 0; }
   .stats-bar { flex-wrap: wrap; }
+  .btn-nav-seccio span { display: none; }
   .noticia-video-wrap { margin: 0 0 1rem; border-radius: 0; }
   .noticia-video { border-radius: 0; }
 }
@@ -1033,30 +1062,6 @@ html[data-tema="fosc"] .btn-vista:not(.actiu):hover { background: #2e3347; }
 html[data-tema="fosc"] .taula-treballs tbody tr:nth-child(even) { background: #252a3a; }
 html[data-tema="fosc"] .taula-treballs tbody tr:hover { background: #2e3347; }
 html[data-tema="fosc"] .card-any { background: #252a3a; color: #f0c060; }
-
-/* ─── Botó tema ──────────────────────────────────────────────────────────────── */
-.btn-tema {
-  position: absolute;
-  left: .75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,.15);
-  border: none;
-  color: #1a1a1a;
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background .15s;
-  z-index: 1;
-}
-
-html[data-tema="fosc"] .btn-tema { color: #e8eaf0; background: rgba(255,255,255,.15); }
-.btn-tema:hover { background: rgba(0,0,0,.25); }
-html[data-tema="fosc"] .btn-tema:hover { background: rgba(255,255,255,.25); }
 
 /* ─── Botó gràfic ───────────────────────────────────────────────────────────── */
 .btn-grafic {
