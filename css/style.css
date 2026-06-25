@@ -91,7 +91,7 @@ header h1 {
   align-items: center;
   gap: 2rem;
   border-top: 1px solid rgba(0,0,0,.12);
-  padding: .75rem 0 1.25rem;
+  padding: .75rem 0 0;
 }
 
 .header-cita {
@@ -108,6 +108,7 @@ header h1 {
   position: relative;
   padding-left: 2rem;
   padding-right: 2rem;
+  padding-bottom: 1.25rem;
 }
 
 .header-cita blockquote::before {
@@ -170,58 +171,83 @@ header h1 {
 }
 
 /* =============================================
-   Navegació global
+   Navegació global (pestanyes integrades al header)
    ============================================= */
 .nav-global {
-  background: var(--color-card);
-  border-bottom: 1px solid var(--color-vora);
-  padding: .5rem 1.5rem;
+  background: linear-gradient(to bottom, #e08c00 0%, #d07c00 100%);
+  padding: 0 1.5rem;
 }
 
 .nav-inner {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  align-items: center;
-  gap: .5rem;
+  align-items: flex-end;
+  gap: .25rem;
 }
 
 .btn-nav-seccio {
   display: inline-flex;
   align-items: center;
   gap: .4rem;
-  padding: .45rem 1rem;
-  background: var(--color-accent);
-  color: #fff;
-  border-radius: 6px;
+  padding: .55rem 1.2rem;
+  background: var(--color-fons);
+  color: var(--color-accent);
+  border-radius: 8px 8px 0 0;
   font-size: .88rem;
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none;
-  transition: background .15s;
+  border: 1px solid rgba(0,0,0,.08);
+  border-bottom: none;
+  transition: background .15s, color .15s;
+  position: relative;
+  top: 1px;
 }
 
-.btn-nav-seccio:hover { background: var(--color-accent-c); }
+.btn-nav-seccio:hover {
+  background: #fff;
+  color: var(--color-accent-c);
+}
+
+.btn-nav-seccio svg {
+  opacity: .7;
+}
 
 .btn-nav-back {
-  background: var(--color-fons);
-  color: var(--color-text);
-  border: 1px solid var(--color-vora);
+  background: rgba(0,0,0,.15);
+  color: #1a1a1a;
+  border-color: transparent;
 }
 
-.btn-nav-back:hover { background: var(--color-vora); }
+.btn-nav-back:hover {
+  background: rgba(0,0,0,.25);
+  color: #1a1a1a;
+}
 
 html[data-tema="fosc"] .nav-global {
-  background: #1e2130;
-  border-color: var(--color-vora);
+  background: linear-gradient(to bottom, #5a3400, #3a2000);
+}
+
+html[data-tema="fosc"] .btn-nav-seccio {
+  background: var(--color-fons);
+  color: #f0c060;
+  border-color: rgba(255,255,255,.08);
+}
+
+html[data-tema="fosc"] .btn-nav-seccio:hover {
+  background: var(--color-card);
+  color: #f0c060;
 }
 
 html[data-tema="fosc"] .btn-nav-back {
-  background: #252a3a;
-  color: var(--color-text);
-  border-color: var(--color-vora);
+  background: rgba(255,255,255,.1);
+  color: #e8eaf0;
+  border-color: transparent;
 }
 
-html[data-tema="fosc"] .btn-nav-back:hover { background: #2e3347; }
+html[data-tema="fosc"] .btn-nav-back:hover {
+  background: rgba(255,255,255,.2);
+}
 
 /* =============================================
    Main
@@ -992,8 +1018,8 @@ footer {
   .header-inner { padding: .75rem 0 .9rem; }
   .header-logo { height: 40px; top: 50%; transform: translateY(-50%); right: 0; }
   header h1 { font-size: 1.2rem; padding-left: 48px; padding-right: 48px; margin-top: .9rem; }
-  .header-inferior { flex-direction: column; gap: .6rem; border-top: none; padding: .6rem 0 1rem; }
-  .header-cita blockquote { font-size: .75rem; padding-left: .8rem; padding-right: .5rem; }
+  .header-inferior { flex-direction: column; gap: .6rem; border-top: none; padding: .6rem 0 0; }
+  .header-cita blockquote { font-size: .75rem; padding-left: .8rem; padding-right: .5rem; padding-bottom: 1rem; }
   .header-cita blockquote::before { font-size: 2.5rem; top: -.1rem; }
   .cometa-tanca { font-size: 2.5rem; vertical-align: -.9rem; }
   .header-cita cite { display: inline; font-size: .6rem; margin-top: 0; }
