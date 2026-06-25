@@ -120,10 +120,7 @@ function htmlNoticia(n) {
     ? `<div class="noticia-imatge-wrap"><img src="${escHtml(n.imatge)}" alt="${escHtml(n.titol)}" class="noticia-imatge" loading="lazy"></div>`
     : '';
 
-  const videoId = extraureVideoId(n.video);
-  const videoHtml = videoId
-    ? `<div class="noticia-video-wrap"><iframe class="noticia-video" src="https://www.youtube-nocookie.com/embed/${escHtml(videoId)}" title="${escHtml(n.titol)}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`
-    : '';
+  const videoHtml = videoIframe(n.video, n.titol);
 
   const textHtml = n.text
     ? `<div class="noticia-text">${escHtml(n.text).replace(/\n/g, '<br>')}</div>`
@@ -146,24 +143,40 @@ function htmlNoticia(n) {
     </article>`;
 }
 
+function videoIframe(val, titol) {
+  if (!val) return '';
+  const v = val.trim();
+
+  // YouTube: extreu l'ID i usa youtube-nocookie
+  const ytId = extraureVideoIdYT(v);
+  if (ytId) {
+    return `<div class="noticia-video-wrap"><iframe class="noticia-video" src="https://www.youtube-nocookie.com/embed/${escHtml(ytId)}" title="${escHtml(titol)}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`;
+  }
+
+  // URL externa: incrusta directament
+  if (v.startsWith('http://') || v.startsWith('https://')) {
+    return `<div class="noticia-video-wrap"><iframe class="noticia-video" src="${escHtml(v)}" title="${escHtml(titol)}" frameborder="0" allowfullscreen loading="lazy"></iframe></div>`;
+  }
+
+  return '';
+}
+
+function extraureVideoIdYT(v) {
+  let m = v.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
+  if (m) return m[1];
+  m = v.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+  if (m) return m[1];
+  m = v.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/);
+  if (m) return m[1];
+  if (/^[a-zA-Z0-9_-]{11}$/.test(v)) return v;
+  return null;
+}
+
 function formatarData(data) {
   if (!data) return '';
   const d = new Date(data);
   if (isNaN(d)) return data;
   return d.toLocaleDateString('ca-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-}
-
-function extraureVideoId(val) {
-  if (!val) return null;
-  const v = val.trim();
-  let m = v.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
-  if (m) return m[1];
-  m = v.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
-  if (m) return m[1];
-  m = v.match(/embed\/([a-zA-Z0-9_-]{11})/);
-  if (m) return m[1];
-  if (/^[a-zA-Z0-9_-]{11}$/.test(v)) return v;
-  return null;
 }
 
 // ─── UTILITATS CSV ────────────────────────────────────────────────────────────
