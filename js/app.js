@@ -196,7 +196,13 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
 
   function renderRecents() {
     const anyMax = Math.max(...dades.map(t => t.any).filter(Boolean));
-    const recents = dades.filter(t => t.any === anyMax).slice(0, N_RECENTS);
+    const recents = dades
+      .filter(t => t.any === anyMax)
+      .sort((a, b) => {
+        const ordre = { premi: 0, destacat: 1, cap: 2 };
+        return (ordre[tipusPremi(a.premi)] ?? 2) - (ordre[tipusPremi(b.premi)] ?? 2);
+      })
+      .slice(0, N_RECENTS);
     renderScrollRecents(recents, 'No hi ha treballs recents.');
   }
 
