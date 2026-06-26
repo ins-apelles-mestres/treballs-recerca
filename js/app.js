@@ -201,7 +201,12 @@ fetch('https://api.counterapi.dev/v1/apellesmestres-tr/visites/up')
   }
 
   function renderDestacats() {
-    const llista = dades.filter(t => tipusPremi(t.premi) !== 'cap');
+    const llista = dades
+      .filter(t => tipusPremi(t.premi) !== 'cap')
+      .sort((a, b) => {
+        const ordre = { premi: 0, destacat: 1 };
+        return (ordre[tipusPremi(a.premi)] ?? 2) - (ordre[tipusPremi(b.premi)] ?? 2);
+      });
     renderScrollRecents(llista, 'No hi ha treballs destacats ni premiats.');
   }
 
